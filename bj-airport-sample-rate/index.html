@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北京机场店商品出样率统计表 - 大数据平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, #1890ff 0%, #1890ff 100%);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: #ffc069;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .brand-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            margin-left: 40px;
+            flex: 1;
+        }
+
+        .nav-tab {
+            color: rgba(255,255,255,0.85);
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 13px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-tab.active {
+            color: white;
+            border-bottom: 3px solid white;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            padding: 6px 12px;
+            color: white;
+            font-size: 12px;
+            width: 160px;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .user-icon {
+            width: 28px;
+            height: 28px;
+            background: #52c41a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: white;
+            padding: 12px 24px;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .breadcrumb span {
+            margin: 0 6px;
+        }
+
+        .breadcrumb .active {
+            color: #1890ff;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .filter-control {
+            display: flex;
+            gap: 8px;
+        }
+
+        .date-input,
+        .select-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .date-input:hover,
+        .select-input:hover {
+            border-color: #40a9ff;
+        }
+
+        .date-input:focus,
+        .select-input:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24,144,255,0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #1890ff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0050b3;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #d9d9d9;
+        }
+
+        .btn-secondary:hover {
+            border-color: #40a9ff;
+            color: #40a9ff;
+        }
+
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e8e8e8;
+            background: #fafafa;
+        }
+
+        .table-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .record-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .record-count span {
+            font-weight: 500;
+            color: #1890ff;
+        }
+
+        .page-size-select {
+            padding: 4px 8px;
+            border: 1px solid #d9d9d9;
+            border-radius: 2px;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: calc(100vh - 400px);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table thead {
+            background: #fafafa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e8e8e8;
+            white-space: nowrap;
+            background: #fafafa;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            word-break: break-word;
+        }
+
+        .data-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .rate-cell {
+            font-weight: 500;
+            color: #1890ff;
+        }
+
+        .rate-high {
+            color: #52c41a;
+        }
+
+        .rate-medium {
+            color: #faad14;
+        }
+
+        .rate-low {
+            color: #f5222d;
+        }
+
+        .num-cell {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            border-top: 1px solid #e8e8e8;
+            background: #fafafa;
+            font-size: 12px;
+        }
+
+        .pagination-item {
+            padding: 4px 8px;
+            min-width: 28px;
+            text-align: center;
+            border: 1px solid #d9d9d9;
+            border-radius: 2px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .pagination-item:hover {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .pagination-item.active {
+            background: #1890ff;
+            color: white;
+            border-color: #1890ff;
+        }
+
+        .pagination-item.disabled {
+            color: #bfbfbf;
+            cursor: not-allowed;
+        }
+
+        /* Utility */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #d9d9d9;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">⭐</div>
+            <div class="brand-name">大数据平台</div>
+            <div class="nav-tabs">
+                <div class="nav-tab">经营看板</div>
+                <div class="nav-tab">销售分析</div>
+                <div class="nav-tab">进销存分析</div>
+                <div class="nav-tab">库存分析</div>
+                <div class="nav-tab">顾客分析</div>
+                <div class="nav-tab">采购分析</div>
+                <div class="nav-tab">操作分析</div>
+                <div class="nav-tab active">风险预控</div>
+                <div class="nav-tab">离线分析</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <input type="text" class="search-box" placeholder="搜索...">
+            <div class="user-icon">🔔</div>
+            <div class="user-icon">👤</div>
+        </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <span>首页</span>
+        <span>></span>
+        <span>报表中心</span>
+        <span>></span>
+        <span class="active">北京机场店商品出样率统计表</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-title">北京机场店商品出样率统计表</div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <div class="filter-item">
+                    <label class="filter-label">日期</label>
+                    <input type="date" class="date-input" value="2026-06-08">
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">门店</label>
+                    <select class="select-input">
+                        <option selected>全部</option>
+                        <option>[7222]中免集团(北京)免税品有限公司</option>
+                        <option>[7223]中免集团北京大兴国际机场免税品有限公司</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">商品新分类</label>
+                    <select class="select-input">
+                        <option selected>全选</option>
+                        <option>[010101]免税进口烟</option>
+                        <option>[010102]免税进口酒</option>
+                        <option>[010103]免税国产烟</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">大类</label>
+                    <select class="select-input">
+                        <option selected>全选</option>
+                        <option>[01]进口酒</option>
+                        <option>[02]进口烟</option>
+                        <option>[03]进口香化</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">品牌</label>
+                    <select class="select-input">
+                        <option selected>全选</option>
+                        <option>[060139]Bulgari 宝格丽</option>
+                        <option>[060140]Gucci 古驰</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn btn-primary">
+                    <span class="btn-icon">🔍</span>查询
+                </button>
+                <button class="btn btn-secondary">
+                    <span class="btn-icon">🔄</span>重置
+                </button>
+                <button class="btn btn-secondary">
+                    <span class="btn-icon">📥</span>导出
+                </button>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-info">
+                    <div class="record-count">
+                        共 <span>30</span> 条
+                    </div>
+                    <div>
+                        <label>每页行数：</label>
+                        <select class="page-size-select">
+                            <option>10</option>
+                            <option selected>30</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>门店</th>
+                            <th>商品新分类</th>
+                            <th>大类</th>
+                            <th>品牌</th>
+                            <th>正品SKU出样率</th>
+                            <th>免值品出样率</th>
+                            <th>正品SKU数量</th>
+                            <th>免值品SKU数量</th>
+                            <th>待处理SKU数量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010101]免税进口烟</td>
+                            <td>[02]进口烟</td>
+                            <td>[001001]国际品牌A</td>
+                            <td class="rate-cell rate-high">95.50%</td>
+                            <td class="rate-cell rate-high">98.20%</td>
+                            <td class="num-cell">156</td>
+                            <td class="num-cell">28</td>
+                            <td class="num-cell">3</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010102]免税进口酒</td>
+                            <td>[01]进口酒</td>
+                            <td>[060139]Bulgari 宝格丽</td>
+                            <td class="rate-cell rate-high">92.30%</td>
+                            <td class="rate-cell rate-medium">76.50%</td>
+                            <td class="num-cell">234</td>
+                            <td class="num-cell">45</td>
+                            <td class="num-cell">8</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010103]免税国产烟</td>
+                            <td>[05]国产烟</td>
+                            <td>[002001]国产品牌B</td>
+                            <td class="rate-cell rate-medium">68.90%</td>
+                            <td class="rate-cell rate-low">45.20%</td>
+                            <td class="num-cell">89</td>
+                            <td class="num-cell">12</td>
+                            <td class="num-cell">5</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010105]免税香化</td>
+                            <td>[03]进口香化</td>
+                            <td>[003001]香化品牌C</td>
+                            <td class="rate-cell rate-high">87.60%</td>
+                            <td class="rate-cell rate-high">91.20%</td>
+                            <td class="num-cell">178</td>
+                            <td class="num-cell">34</td>
+                            <td class="num-cell">2</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010106]免税奢侈品</td>
+                            <td>[06]进口精品</td>
+                            <td>[060140]Gucci 古驰</td>
+                            <td class="rate-cell rate-high">94.70%</td>
+                            <td class="rate-cell rate-high">96.80%</td>
+                            <td class="num-cell">312</td>
+                            <td class="num-cell">67</td>
+                            <td class="num-cell">4</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010108]免税电子产品</td>
+                            <td>[08]代理品牌商品</td>
+                            <td>[004001]电子品牌D</td>
+                            <td class="rate-cell rate-medium">71.50%</td>
+                            <td class="rate-cell rate-low">52.30%</td>
+                            <td class="num-cell">145</td>
+                            <td class="num-cell">23</td>
+                            <td class="num-cell">6</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010109]免税食品百货</td>
+                            <td>[07]进口食品</td>
+                            <td>[005001]食品品牌E</td>
+                            <td class="rate-cell rate-high">89.20%</td>
+                            <td class="rate-cell rate-high">93.10%</td>
+                            <td class="num-cell">267</td>
+                            <td class="num-cell">41</td>
+                            <td class="num-cell">3</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010110]免税其他</td>
+                            <td>[10]奥运产品</td>
+                            <td>[006001]其他品牌F</td>
+                            <td class="rate-cell rate-medium">65.80%</td>
+                            <td class="rate-cell rate-low">48.90%</td>
+                            <td class="num-cell">98</td>
+                            <td class="num-cell">15</td>
+                            <td class="num-cell">7</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[020102]国产有税进口酒</td>
+                            <td>[19]有税进口酒</td>
+                            <td>[007001]品牌G</td>
+                            <td class="rate-cell rate-high">91.40%</td>
+                            <td class="rate-cell rate-high">94.60%</td>
+                            <td class="num-cell">201</td>
+                            <td class="num-cell">36</td>
+                            <td class="num-cell">5</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[020105]国产有税香化</td>
+                            <td>[09]有税国产品</td>
+                            <td>[008001]品牌H</td>
+                            <td class="rate-cell rate-high">86.70%</td>
+                            <td class="rate-cell rate-high">89.30%</td>
+                            <td class="num-cell">167</td>
+                            <td class="num-cell">31</td>
+                            <td class="num-cell">4</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[020106]国产有税奢侈品</td>
+                            <td>[14]统购有税精品</td>
+                            <td>[009001]品牌I</td>
+                            <td class="rate-cell rate-medium">73.50%</td>
+                            <td class="rate-cell rate-medium">68.40%</td>
+                            <td class="num-cell">123</td>
+                            <td class="num-cell">22</td>
+                            <td class="num-cell">9</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[020108]国产有税电子产品</td>
+                            <td>[09]有税国产品</td>
+                            <td>[010001]品牌J</td>
+                            <td class="rate-cell rate-high">88.90%</td>
+                            <td class="rate-cell rate-high">92.10%</td>
+                            <td class="num-cell">189</td>
+                            <td class="num-cell">35</td>
+                            <td class="num-cell">2</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[020202]进口有税进口酒</td>
+                            <td>[20]退税商品</td>
+                            <td>[011001]品牌K</td>
+                            <td class="rate-cell rate-high">90.20%</td>
+                            <td class="rate-cell rate-high">95.30%</td>
+                            <td class="num-cell">234</td>
+                            <td class="num-cell">52</td>
+                            <td class="num-cell">3</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[020205]进口有税香化</td>
+                            <td>[03]进口香化</td>
+                            <td>[012001]品牌L</td>
+                            <td class="rate-cell rate-medium">74.60%</td>
+                            <td class="rate-cell rate-medium">71.20%</td>
+                            <td class="num-cell">112</td>
+                            <td class="num-cell">18</td>
+                            <td class="num-cell">8</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[020206]进口有税奢侈品</td>
+                            <td>[15]退税精品</td>
+                            <td>[013001]品牌M</td>
+                            <td class="rate-cell rate-high">93.80%</td>
+                            <td class="rate-cell rate-high">97.10%</td>
+                            <td class="num-cell">289</td>
+                            <td class="num-cell">58</td>
+                            <td class="num-cell">2</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[020209]进口有税食品百货</td>
+                            <td>[21]农产品</td>
+                            <td>[014001]品牌N</td>
+                            <td class="rate-cell rate-high">85.40%</td>
+                            <td class="rate-cell rate-high">88.60%</td>
+                            <td class="num-cell">156</td>
+                            <td class="num-cell">29</td>
+                            <td class="num-cell">5</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[020210]进口有税其他</td>
+                            <td>[22]海南免税</td>
+                            <td>[015001]品牌O</td>
+                            <td class="rate-cell rate-medium">69.50%</td>
+                            <td class="rate-cell rate-low">54.70%</td>
+                            <td class="num-cell">87</td>
+                            <td class="num-cell">14</td>
+                            <td class="num-cell">6</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010101]免税进口烟</td>
+                            <td>[02]进口烟</td>
+                            <td>[016001]品牌P</td>
+                            <td class="rate-cell rate-high">96.10%</td>
+                            <td class="rate-cell rate-high">99.20%</td>
+                            <td class="num-cell">267</td>
+                            <td class="num-cell">44</td>
+                            <td class="num-cell">1</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010102]免税进口酒</td>
+                            <td>[01]进口酒</td>
+                            <td>[017001]品牌Q</td>
+                            <td class="rate-cell rate-high">91.70%</td>
+                            <td class="rate-cell rate-high">94.80%</td>
+                            <td class="num-cell">203</td>
+                            <td class="num-cell">38</td>
+                            <td class="num-cell">4</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010103]免税国产烟</td>
+                            <td>[05]国产烟</td>
+                            <td>[018001]品牌R</td>
+                            <td class="rate-cell rate-medium">70.20%</td>
+                            <td class="rate-cell rate-low">50.60%</td>
+                            <td class="num-cell">134</td>
+                            <td class="num-cell">24</td>
+                            <td class="num-cell">7</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010104]免税国产酒</td>
+                            <td>[04]国产酒</td>
+                            <td>[019001]品牌S</td>
+                            <td class="rate-cell rate-high">84.30%</td>
+                            <td class="rate-cell rate-high">87.40%</td>
+                            <td class="num-cell">145</td>
+                            <td class="num-cell">26</td>
+                            <td class="num-cell">6</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010105]免税香化</td>
+                            <td>[03]进口香化</td>
+                            <td>[020001]品牌T</td>
+                            <td class="rate-cell rate-high">89.80%</td>
+                            <td class="rate-cell rate-high">93.50%</td>
+                            <td class="num-cell">198</td>
+                            <td class="num-cell">37</td>
+                            <td class="num-cell">3</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010106]免税奢侈品</td>
+                            <td>[06]进口精品</td>
+                            <td>[021001]品牌U</td>
+                            <td class="rate-cell rate-medium">75.90%</td>
+                            <td class="rate-cell rate-medium">72.60%</td>
+                            <td class="num-cell">167</td>
+                            <td class="num-cell">28</td>
+                            <td class="num-cell">8</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010108]免税电子产品</td>
+                            <td>[08]代理品牌商品</td>
+                            <td>[022001]品牌V</td>
+                            <td class="rate-cell rate-high">92.40%</td>
+                            <td class="rate-cell rate-high">95.70%</td>
+                            <td class="num-cell">256</td>
+                            <td class="num-cell">48</td>
+                            <td class="num-cell">2</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[010109]免税食品百货</td>
+                            <td>[07]进口食品</td>
+                            <td>[023001]品牌W</td>
+                            <td class="rate-cell rate-high">88.10%</td>
+                            <td class="rate-cell rate-high">91.20%</td>
+                            <td class="num-cell">189</td>
+                            <td class="num-cell">33</td>
+                            <td class="num-cell">4</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[010110]免税其他</td>
+                            <td>[10]奥运产品</td>
+                            <td>[024001]品牌X</td>
+                            <td class="rate-cell rate-medium">67.60%</td>
+                            <td class="rate-cell rate-low">49.20%</td>
+                            <td class="num-cell">112</td>
+                            <td class="num-cell">19</td>
+                            <td class="num-cell">9</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7223]中免集团大兴机场</td>
+                            <td>[020102]国产有税进口酒</td>
+                            <td>[19]有税进口酒</td>
+                            <td>[025001]品牌Y</td>
+                            <td class="rate-cell rate-high">86.50%</td>
+                            <td class="rate-cell rate-high">90.30%</td>
+                            <td class="num-cell">234</td>
+                            <td class="num-cell">42</td>
+                            <td class="num-cell">5</td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-08</td>
+                            <td>[7222]中免集团(北京)</td>
+                            <td>[020104]国产有税国产酒</td>
+                            <td>[25]有税国产酒</td>
+                            <td>[026001]品牌Z</td>
+                            <td class="rate-cell rate-high">93.20%</td>
+                            <td class="rate-cell rate-high">96.40%</td>
+                            <td class="num-cell">278</td>
+                            <td class="num-cell">51</td>
+                            <td class="num-cell">3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <span style="margin-right: 8px;">第 1 页</span>
+                <span class="pagination-item disabled">◀</span>
+                <span class="pagination-item active">1</span>
+                <span class="pagination-item">2</span>
+                <span class="pagination-item">▶</span>
+                <span style="margin-left: 16px; color: #666;">共 30 条</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
