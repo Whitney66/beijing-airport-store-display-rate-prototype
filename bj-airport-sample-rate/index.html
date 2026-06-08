@@ -174,7 +174,9 @@
         .filter-section {
             padding: 14px 16px;
             margin-bottom: 14px;
-            overflow-x: auto;
+            overflow: visible;
+            position: relative;
+            z-index: 20;
         }
 
         .filter-content {
@@ -183,6 +185,7 @@
             gap: 12px;
             flex-wrap: nowrap;
             min-width: max-content;
+            overflow: visible;
         }
 
         .filter-group {
@@ -280,15 +283,17 @@
         }
 
         .select-panel {
-            position: static;
+            position: absolute;
+            left: 0;
+            top: calc(100% + 8px);
             width: 100%;
             background: #ffffff;
             border: 1px solid #d9e2ef;
             border-radius: 8px;
-            box-shadow: none;
+            box-shadow: 0 8px 24px rgba(31, 45, 61, 0.15);
             padding: 10px;
-            margin-top: 8px;
             display: none;
+            z-index: 35;
         }
 
         .select-panel.show {
@@ -348,11 +353,83 @@
             flex-shrink: 0;
         }
 
+        .filter-meta {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .data-note-wrap {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            min-height: 36px;
+        }
+
+        .data-note-trigger {
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: 13px;
+            color: #2f69df;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .data-note-panel {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 720px;
+            max-width: min(720px, calc(100vw - 80px));
+            background: #ffffff;
+            border: 1px solid #d9e2ef;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(31, 45, 61, 0.12);
+            padding: 16px 18px;
+            display: none;
+            z-index: 40;
+            color: #324152;
+            line-height: 1.75;
+            font-size: 13px;
+        }
+
+        .data-note-panel.show {
+            display: block;
+        }
+
+        .data-note-title {
+            font-weight: 600;
+            color: #1f2d3d;
+            margin: 0 0 6px;
+        }
+
+        .data-note-block {
+            margin-bottom: 12px;
+        }
+
+        .data-note-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .data-note-list {
+            margin: 6px 0 0 18px;
+        }
+
+        .data-note-code-list {
+            margin: 4px 0 0 18px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #4a5568;
+        }
+
         .action-section {
             display: flex;
             align-items: flex-end;
             gap: 8px;
-            margin-left: auto;
             padding-bottom: 0;
             flex-shrink: 0;
         }
@@ -699,10 +776,44 @@
                     </div>
                 </div>
 
-                <div class="action-section">
-                    <button class="btn btn-primary" onclick="queryData()">查询</button>
-                    <button class="btn btn-default" onclick="resetFilter()">重置</button>
-                    <button class="btn btn-default" onclick="openExportModal()">导出</button>
+                <div class="filter-meta">
+                    <div class="data-note-wrap">
+                        <button class="data-note-trigger" type="button" onclick="toggleDataNote(event)">数据说明</button>
+                        <div class="data-note-panel" id="dataNotePanel">
+                            <div class="data-note-block">
+                                <div class="data-note-title">需求背景：</div>
+                                <div>为精确掌握 [7222]中免集团(北京)免税品有限公司 与 [7223]中免集团北京大兴国际机场免税品有限公司 两家门店的库存分布及商品出样状况，需对门店库位进行标签化管理，明确划分仓库库位与销售库位，并在此基础上精准统计同款SKU在两类库位上的出样率。数据提取采用T+1模式，以总部EOP《商品历史库存明细》报表为数据来源。</div>
+                            </div>
+                            <div class="data-note-block">
+                                <div class="data-note-title">指标说明：</div>
+                                <ul class="data-note-list">
+                                    <li>正品SKU出样率：=销售库位正品SKU去重；仓库库位正品SKU去重；销售库位有货&仓库库位有货的正品SKU数量/仓库库位正品SKU去重数量，基于商品编码去重</li>
+                                    <li>免值品出样率：=销售库位免值品SKU去重；仓库库位免值品SKU去重；销售库位有货&仓库库位有货的免值品SKU数量/仓库库位免值品SKU去重数量</li>
+                                    <li>正品SKU数量：=正品库位按照二级店面统计：722201、722204、722301、722305、722308，统计正品sku数量去重</li>
+                                    <li>免值品SKU数量：=免值品库位按照二级店面统计：722202、722205、722302、722306、722309，统计免值品sku数量去重</li>
+                                    <li>待处理SKU数量：=待处理商品按照二级店面统计：722203、722206、722303、722304、722307、722310，统计待处理免值品sku数量去重</li>
+                                    <li>正品SKU数量:=商品属性大类是 非[26]免值品的归为正品；非仓库库位的归销售库位；统计正品sku的数量去重</li>
+                                    <li>免值品SKU数量:=商品属性大类是 [26]免值品的归为免值品；非仓库库位的商品归销售库位；统计免值品sku的数量去重</li>
+                                </ul>
+                            </div>
+                            <div class="data-note-block">
+                                <div class="data-note-title">补充说明：</div>
+                                <ul class="data-note-list">
+                                    <li>【26】大类为免值品，其余为正品</li>
+                                    <li>销售库位与库存库位基于店面加以区分，除了销售库位，剩余店面均为库存库位。销售库位如下：</li>
+                                </ul>
+                                <div style="margin-top: 6px;">-- [7222]中免集团(北京)免税品有限公司：</div>
+                                <div class="data-note-code-list">[722201]<br>[722202]<br>[722203]<br>[722204]<br>[722205]<br>[722206]</div>
+                                <div style="margin-top: 8px;">-- [7223]中免集团北京大兴国际机场免税品有限公司：</div>
+                                <div class="data-note-code-list">[722301]<br>[722302]<br>[722303]<br>[722304]<br>[722305]<br>[722306]<br>[722307]<br>[722308]<br>[722309]<br>[722310]</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-section">
+                        <button class="btn btn-primary" onclick="queryData()">查询</button>
+                        <button class="btn btn-default" onclick="resetFilter()">重置</button>
+                        <button class="btn btn-default" onclick="openExportModal()">导出</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -908,12 +1019,22 @@
             }
         }
 
+        function toggleDataNote(event) {
+            event.stopPropagation();
+            const panel = document.getElementById('dataNotePanel');
+            panel.classList.toggle('show');
+        }
+
         function closeAllPanels(event) {
-            if (event && event.target.closest('.multi-select')) {
+            if (event && (event.target.closest('.multi-select') || event.target.closest('.data-note-wrap'))) {
                 return;
             }
             document.querySelectorAll('.select-panel').forEach(panel => panel.classList.remove('show'));
             document.querySelectorAll('.select-box').forEach(box => box.classList.remove('open'));
+            const dataNotePanel = document.getElementById('dataNotePanel');
+            if (dataNotePanel) {
+                dataNotePanel.classList.remove('show');
+            }
         }
 
         function selectAllOptions(event, name, checked) {
