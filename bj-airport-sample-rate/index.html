@@ -516,10 +516,13 @@
 
 
         .table td {
-            white-space: normal;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            vertical-align: top;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .table td.store-cell {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .table tbody tr:nth-child(even) {
@@ -1080,7 +1083,7 @@
             tbody.innerHTML = pageData.map(row => `
                 <tr>
                     <td>${row.日期}</td>
-                    <td title="${row.门店}">${row.门店}</td>
+                    <td class="store-cell" title="${row.门店}">${row.门店}</td>
                     <td>${row.商品新分类}</td>
                     <td>${row.大类}</td>
                     <td title="${row.品牌}">${row.品牌}</td>
