@@ -311,21 +311,6 @@
             outline: none;
         }
 
-        .select-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 12px;
-        }
-
-        .select-actions button {
-            border: none;
-            background: none;
-            color: #2f69df;
-            cursor: pointer;
-            padding: 0;
-        }
-
         .option-list {
             display: flex;
             flex-direction: column;
@@ -695,10 +680,6 @@
                     </div>
                     <div class="select-panel" id="storePanel">
                         <input class="select-search" type="text" placeholder="搜索门店" oninput="filterOptions('store', this.value)">
-                        <div class="select-actions">
-                            <button type="button" onclick="selectAllOptions(event, 'store', true)">全选</button>
-                            <button type="button" onclick="selectAllOptions(event, 'store', false)">清空</button>
-                        </div>
                         <div class="option-list" id="storeOptions">
                             <label class="option-item"><input type="checkbox" data-select="store" value="全部" checked onchange="handleAllOptionChange('store', this)"><span>全部</span></label>
                             <label class="option-item"><input type="checkbox" data-select="store" value="[7222]中免集团(北京)免税品有限公司" checked onchange="handleOptionChange('store')"><span>[7222]中免集团(北京)免税品有限公司</span></label>
@@ -715,10 +696,6 @@
                     </div>
                     <div class="select-panel" id="categoryPanel">
                         <input class="select-search" type="text" placeholder="搜索分类" oninput="filterOptions('category', this.value)">
-                        <div class="select-actions">
-                            <button type="button" onclick="selectAllOptions(event, 'category', true)">全选</button>
-                            <button type="button" onclick="selectAllOptions(event, 'category', false)">清空</button>
-                        </div>
                         <div class="option-list" id="categoryOptions">
                             <label class="option-item"><input type="checkbox" data-select="category" value="全部" checked onchange="handleAllOptionChange('category', this)"><span>全部</span></label>
                             <label class="option-item"><input type="checkbox" data-select="category" value="[010101]免税进口烟" checked onchange="handleOptionChange('category')"><span>[010101]免税进口烟</span></label>
@@ -738,10 +715,6 @@
                     </div>
                     <div class="select-panel" id="classPanel">
                         <input class="select-search" type="text" placeholder="搜索大类" oninput="filterOptions('class', this.value)">
-                        <div class="select-actions">
-                            <button type="button" onclick="selectAllOptions(event, 'class', true)">全选</button>
-                            <button type="button" onclick="selectAllOptions(event, 'class', false)">清空</button>
-                        </div>
                         <div class="option-list" id="classOptions">
                             <label class="option-item"><input type="checkbox" data-select="class" value="全部" checked onchange="handleAllOptionChange('class', this)"><span>全部</span></label>
                             <label class="option-item"><input type="checkbox" data-select="class" value="[01]进口酒" checked onchange="handleOptionChange('class')"><span>[01]进口酒</span></label>
@@ -761,10 +734,6 @@
                     </div>
                     <div class="select-panel" id="brandPanel">
                         <input class="select-search" type="text" placeholder="搜索品牌" oninput="filterOptions('brand', this.value)">
-                        <div class="select-actions">
-                            <button type="button" onclick="selectAllOptions(event, 'brand', true)">全选</button>
-                            <button type="button" onclick="selectAllOptions(event, 'brand', false)">清空</button>
-                        </div>
                         <div class="option-list" id="brandOptions">
                             <label class="option-item"><input type="checkbox" data-select="brand" value="全部" checked onchange="handleAllOptionChange('brand', this)"><span>全部</span></label>
                             <label class="option-item"><input type="checkbox" data-select="brand" value="[060139]Bulgari 宝格丽" checked onchange="handleOptionChange('brand')"><span>[060139]Bulgari 宝格丽</span></label>
@@ -883,14 +852,25 @@
             totalCount: 0,
             sortColumn: '',
             sortOrder: 'asc',
+            allData: [],
             data: []
         };
 
-        function generateMockData() {
+        function getDateOffsetString(offsetDays) {
+            const date = new Date();
+            date.setDate(date.getDate() + offsetDays);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function generateMockData(defaultDate) {
             const categories = ['[010101]免税进口烟', '[010102]免税进口酒', '[010103]免税国产烟', '[010104]免税国产酒', '[010105]免税香化'];
             const classes = ['[01]进口酒', '[02]进口烟', '[03]进口香化', '[04]国产酒', '[05]国产烟'];
             const brands = ['[060139]Bulgari 宝格丽', '[060140]Louis Vuitton', '[060141]Hermès', '[060142]Cartier', '[060143]Rolex'];
             const stores = ['[7222]中免集团(北京)免税品有限公司', '[7223]中免集团北京大兴国际机场免税品有限公司'];
+            const dates = [defaultDate, getDateOffsetString(-2), getDateOffsetString(-3)];
             const data = [];
 
             for (let i = 1; i <= 68; i++) {
@@ -898,8 +878,9 @@
                 const mainClass = classes[i % classes.length];
                 const brand = brands[i % brands.length];
                 const store = stores[i % stores.length];
+                const date = dates[(i - 1) % dates.length];
                 data.push({
-                    日期: '2026-06-08',
+                    日期: date,
                     门店: store,
                     商品新分类: category,
                     大类: mainClass,
@@ -916,39 +897,26 @@
         }
 
         function getYesterdayString() {
-            const date = new Date();
-            date.setDate(date.getDate() - 1);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function getTodayString() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return getDateOffsetString(-1);
         }
 
         function init() {
-            dataState.data = generateMockData();
-            dataState.totalCount = dataState.data.length;
             defaultState.date = getYesterdayString();
+            dataState.allData = generateMockData(defaultState.date);
             const dateInput = document.getElementById('filterDate');
             dateInput.value = defaultState.date;
             dateInput.max = defaultState.date;
             applyDefaultSelections();
             renderAllSummaries();
-            renderTable();
+            queryData();
             document.addEventListener('click', closeAllPanels);
         }
 
         function applyDefaultSelections() {
             ['store', 'category', 'class', 'brand'].forEach(name => {
+                const selectAllByDefault = defaultState[name].includes('全部');
                 document.querySelectorAll(`input[data-select="${name}"]`).forEach(item => {
-                    item.checked = defaultState[name].includes(item.value);
+                    item.checked = selectAllByDefault || defaultState[name].includes(item.value);
                 });
             });
         }
@@ -966,7 +934,7 @@
             const normalInputs = getNormalOptionInputs(name);
             const checkedCount = normalInputs.filter(item => item.checked).length;
             if (allInput) {
-                allInput.checked = checkedCount === normalInputs.length || checkedCount === 0;
+                allInput.checked = checkedCount === normalInputs.length;
             }
         }
 
@@ -975,9 +943,6 @@
             getNormalOptionInputs(name).forEach(item => {
                 item.checked = checked;
             });
-            if (!checked) {
-                element.checked = true;
-            }
             renderAllSummaries();
         }
 
@@ -990,7 +955,12 @@
             const selected = getSelectedValues(name);
             const summary = document.getElementById(`${name}Summary`);
 
-            if (!selected.length || selected.includes('全部')) {
+            if (!selected.length) {
+                summary.innerHTML = '<span class="summary-count">未选择</span>';
+                return;
+            }
+
+            if (selected.includes('全部')) {
                 summary.innerHTML = '<span class="summary-pill">全部</span>';
                 return;
             }
@@ -1037,20 +1007,6 @@
             }
         }
 
-        function selectAllOptions(event, name, checked) {
-            event.stopPropagation();
-            const allInput = document.querySelector(`input[data-select="${name}"][value="全部"]`);
-            if (allInput) {
-                allInput.checked = checked;
-            }
-            getNormalOptionInputs(name).forEach(item => {
-                if (item.closest('.option-item').style.display !== 'none') {
-                    item.checked = checked;
-                }
-            });
-            renderAllSummaries();
-        }
-
         function filterOptions(name, keyword) {
             const lower = keyword.trim().toLowerCase();
             document.querySelectorAll(`#${name}Options .option-item`).forEach(item => {
@@ -1059,9 +1015,17 @@
             });
         }
 
+        function matchesFilter(selectedValues, rowValue) {
+            return !selectedValues.length || selectedValues.includes('全部') || selectedValues.includes(rowValue);
+        }
+
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             const emptyState = document.getElementById('emptyState');
+            const totalPages = Math.max(1, Math.ceil(dataState.data.length / dataState.pageSize));
+            if (dataState.currentPage > totalPages) {
+                dataState.currentPage = totalPages;
+            }
             const start = (dataState.currentPage - 1) * dataState.pageSize;
             const end = start + dataState.pageSize;
             const pageData = dataState.data.slice(start, end);
@@ -1090,14 +1054,28 @@
                 </tr>
             `).join('');
 
-            const totalPages = Math.max(1, Math.ceil(dataState.data.length / dataState.pageSize));
             document.getElementById('totalPages').textContent = totalPages;
             document.getElementById('pageInput').value = dataState.currentPage;
         }
 
-
         function queryData() {
             closeAllPanels();
+            const selectedDate = document.getElementById('filterDate').value;
+            const selectedStores = getSelectedValues('store');
+            const selectedCategories = getSelectedValues('category');
+            const selectedClasses = getSelectedValues('class');
+            const selectedBrands = getSelectedValues('brand');
+
+            dataState.data = dataState.allData.filter(row => {
+                const matchDate = !selectedDate || row.日期 === selectedDate;
+                const matchStore = matchesFilter(selectedStores, row.门店);
+                const matchCategory = matchesFilter(selectedCategories, row.商品新分类);
+                const matchClass = matchesFilter(selectedClasses, row.大类);
+                const matchBrand = matchesFilter(selectedBrands, row.品牌);
+                return matchDate && matchStore && matchCategory && matchClass && matchBrand;
+            });
+
+            dataState.totalCount = dataState.data.length;
             dataState.currentPage = 1;
             renderTable();
         }
