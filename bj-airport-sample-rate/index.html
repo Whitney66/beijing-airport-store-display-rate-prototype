@@ -454,12 +454,13 @@
 
         .table-container {
             max-height: 420px;
-            overflow: auto;
+            overflow-x: auto;
+            overflow-y: auto;
         }
 
         .table {
             width: 100%;
-            min-width: 1360px;
+            min-width: 1560px;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -490,6 +491,31 @@
             word-break: break-all;
             vertical-align: middle;
         }
+
+        .table thead tr:first-child th {
+            background: #dfe8f5;
+            border-bottom: 1px solid #c9d7ea;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #22324a;
+        }
+
+        .table thead tr:last-child th {
+            background: #f7f9fc;
+            text-align: center;
+        }
+
+        .table thead .group-sales {
+            background: #e6f4ea;
+            color: #1f6b3b;
+        }
+
+        .table thead .group-warehouse {
+            background: #fff4de;
+            color: #8a5a00;
+        }
+
 
         .table td {
             white-space: nowrap;
@@ -756,13 +782,16 @@
                             <div class="data-note-block">
                                 <div class="data-note-title">指标说明：</div>
                                 <ul class="data-note-list">
+                                    <li>出样率指标包括：正品SKU出样率、免值品出样率</li>
                                     <li>正品SKU出样率：=销售库位正品SKU去重；仓库库位正品SKU去重；销售库位有货&仓库库位有货的正品SKU数量/仓库库位正品SKU去重数量，基于商品编码去重</li>
                                     <li>免值品出样率：=销售库位免值品SKU去重；仓库库位免值品SKU去重；销售库位有货&仓库库位有货的免值品SKU数量/仓库库位免值品SKU去重数量</li>
-                                    <li>正品SKU数量：=正品库位按照二级店面统计：722201、722204、722301、722305、722308，统计正品sku数量去重</li>
-                                    <li>免值品SKU数量：=免值品库位按照二级店面统计：722202、722205、722302、722306、722309，统计免值品sku数量去重</li>
-                                    <li>待处理SKU数量：=待处理商品按照二级店面统计：722203、722206、722303、722304、722307、722310，统计待处理免值品sku数量去重</li>
-                                    <li>正品SKU数量:=商品属性大类是 非[26]免值品的归为正品；非仓库库位的归销售库位；统计正品sku的数量去重</li>
-                                    <li>免值品SKU数量:=商品属性大类是 [26]免值品的归为免值品；非仓库库位的商品归销售库位；统计免值品sku的数量去重</li>
+                                    <li>仓库库位包括：正品SKU数量、免值品SKU数量、待处理SKU数量</li>
+                                    <li>仓库库位正品SKU数量：=正品库位按照二级店面统计：722201、722204、722301、722305、722308，统计正品SKU数量去重</li>
+                                    <li>仓库库位免值品SKU数量：=免值品库位按照二级店面统计：722202、722205、722302、722306、722309，统计免值品SKU数量去重</li>
+                                    <li>待处理SKU数量：=待处理商品按照二级店面统计：722203、722206、722303、722304、722307、722310，统计待处理SKU数量去重</li>
+                                    <li>销售库位包括：正品SKU数量、免值品SKU数量</li>
+                                    <li>销售库位正品SKU数量：=商品属性大类为非[26]免值品，且非仓库库位的商品归为销售库位，统计正品SKU数量去重</li>
+                                    <li>销售库位免值品SKU数量：=商品属性大类为[26]免值品，且非仓库库位的商品归为销售库位，统计免值品SKU数量去重</li>
                                 </ul>
                             </div>
                             <div class="data-note-block">
@@ -792,16 +821,22 @@
                 <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th style="width: 96px;">日期</th>
-                            <th style="width: 220px;">门店</th>
-                            <th style="width: 150px;">商品新分类</th>
-                            <th style="width: 96px;">大类</th>
-                            <th style="width: 150px;">品牌</th>
-                            <th style="width: 112px;">正品SKU出样率</th>
-                            <th style="width: 112px;">免值品SKU出样率</th>
+                            <th rowspan="2" style="width: 96px;">日期</th>
+                            <th rowspan="2" style="width: 220px;">门店</th>
+                            <th rowspan="2" style="width: 150px;">商品新分类</th>
+                            <th rowspan="2" style="width: 96px;">大类</th>
+                            <th rowspan="2" style="width: 150px;">品牌</th>
+                            <th rowspan="2" style="width: 112px;">正品SKU出样率</th>
+                            <th rowspan="2" style="width: 112px;">免值品出样率</th>
+                            <th colspan="3" class="group-warehouse">仓库库位</th>
+                            <th colspan="2" class="group-sales">销售库位</th>
+                        </tr>
+                        <tr>
                             <th style="width: 108px;">正品SKU数量</th>
                             <th style="width: 108px;">免值品SKU数量</th>
                             <th style="width: 108px;">待处理SKU数量</th>
+                            <th style="width: 108px;">正品SKU数量</th>
+                            <th style="width: 108px;">免值品SKU数量</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -886,10 +921,12 @@
                     大类: mainClass,
                     品牌: brand,
                     '正品SKU出样率': (78 + (i % 17) * 0.91).toFixed(2),
-                    '免值品SKU出样率': (74 + (i % 13) * 1.08).toFixed(2),
-                    '正品SKU数量': 120 + i * 3,
-                    '免值品SKU数量': 85 + i * 2,
-                    '待处理SKU数量': 8 + (i % 19)
+                    '免值品出样率': (74 + (i % 13) * 1.08).toFixed(2),
+                    '仓库库位正品SKU数量': 120 + i * 3,
+                    '仓库库位免值品SKU数量': 85 + i * 2,
+                    '待处理SKU数量': 8 + (i % 19),
+                    '销售库位正品SKU数量': 64 + i * 2,
+                    '销售库位免值品SKU数量': 42 + i
                 });
             }
 
@@ -1047,10 +1084,12 @@
                     <td>${row.大类}</td>
                     <td title="${row.品牌}">${row.品牌}</td>
                     <td class="number">${row['正品SKU出样率']}%</td>
-                    <td class="number">${row['免值品SKU出样率']}%</td>
-                    <td class="number">${row['正品SKU数量']}</td>
-                    <td class="number">${row['免值品SKU数量']}</td>
+                    <td class="number">${row['免值品出样率']}%</td>
+                    <td class="number">${row['仓库库位正品SKU数量']}</td>
+                    <td class="number">${row['仓库库位免值品SKU数量']}</td>
                     <td class="number">${row['待处理SKU数量']}</td>
+                    <td class="number">${row['销售库位正品SKU数量']}</td>
+                    <td class="number">${row['销售库位免值品SKU数量']}</td>
                 </tr>
             `).join('');
 
