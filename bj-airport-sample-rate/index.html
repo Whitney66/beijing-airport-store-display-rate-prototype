@@ -516,8 +516,10 @@
 
 
         .table td {
-            white-space: nowrap;
-            word-break: keep-all;
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            vertical-align: top;
         }
 
         .table tbody tr:nth-child(even) {
