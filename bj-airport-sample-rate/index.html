@@ -280,17 +280,15 @@
         }
 
         .select-panel {
-            position: absolute;
-            left: 0;
-            top: calc(100% + 8px);
+            position: static;
             width: 100%;
             background: #ffffff;
             border: 1px solid #d9e2ef;
             border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(31, 45, 61, 0.15);
+            box-shadow: none;
             padding: 10px;
+            margin-top: 8px;
             display: none;
-            z-index: 30;
         }
 
         .select-panel.show {
@@ -324,8 +322,6 @@
         }
 
         .option-list {
-            max-height: 180px;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -401,7 +397,7 @@
 
         .table {
             width: 100%;
-            min-width: 1620px;
+            min-width: 1360px;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -437,15 +433,6 @@
             white-space: nowrap;
         }
 
-        .table th.sortable {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .table th.sortable:hover {
-            background: #e7edf7;
-        }
-
         .table tbody tr:nth-child(even) {
             background: #fafbfd;
         }
@@ -456,16 +443,6 @@
 
         .table td.number {
             text-align: right;
-        }
-
-        .sort-icon {
-            margin-left: 4px;
-            color: #97a3af;
-            font-size: 11px;
-        }
-
-        .sort-icon.active {
-            color: #2f69df;
         }
 
         .empty-state {
@@ -735,16 +712,16 @@
                 <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th style="width: 120px;">日期</th>
-                            <th style="width: 240px;">门店</th>
-                            <th style="width: 180px;">商品新分类</th>
-                            <th style="width: 120px;">大类</th>
-                            <th style="width: 180px;">品牌</th>
-                            <th style="width: 140px;" class="sortable" onclick="sortTable('正品SKU出样率', this)">正品SKU出样率 <span class="sort-icon">↕</span></th>
-                            <th style="width: 140px;" class="sortable" onclick="sortTable('免值品SKU出样率', this)">免值品SKU出样率 <span class="sort-icon">↕</span></th>
-                            <th style="width: 130px;" class="sortable" onclick="sortTable('正品SKU数量', this)">正品SKU数量 <span class="sort-icon">↕</span></th>
-                            <th style="width: 140px;" class="sortable" onclick="sortTable('免值品SKU数量', this)">免值品SKU数量 <span class="sort-icon">↕</span></th>
-                            <th style="width: 140px;" class="sortable" onclick="sortTable('待处理SKU数量', this)">待处理SKU数量 <span class="sort-icon">↕</span></th>
+                            <th style="width: 96px;">日期</th>
+                            <th style="width: 220px;">门店</th>
+                            <th style="width: 150px;">商品新分类</th>
+                            <th style="width: 96px;">大类</th>
+                            <th style="width: 150px;">品牌</th>
+                            <th style="width: 112px;">正品SKU出样率</th>
+                            <th style="width: 112px;">免值品SKU出样率</th>
+                            <th style="width: 108px;">正品SKU数量</th>
+                            <th style="width: 108px;">免值品SKU数量</th>
+                            <th style="width: 108px;">待处理SKU数量</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -997,37 +974,6 @@
             document.getElementById('pageInput').value = dataState.currentPage;
         }
 
-        function updateSortIcons(currentHeader) {
-            document.querySelectorAll('.sort-icon').forEach(icon => {
-                icon.classList.remove('active');
-                icon.textContent = '↕';
-            });
-            if (!currentHeader) {
-                return;
-            }
-            const icon = currentHeader.querySelector('.sort-icon');
-            icon.classList.add('active');
-            icon.textContent = dataState.sortOrder === 'asc' ? '↑' : '↓';
-        }
-
-        function sortTable(column, header) {
-            if (dataState.sortColumn === column) {
-                dataState.sortOrder = dataState.sortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                dataState.sortColumn = column;
-                dataState.sortOrder = 'asc';
-            }
-
-            dataState.data.sort((a, b) => {
-                const valA = parseFloat(a[column]);
-                const valB = parseFloat(b[column]);
-                return dataState.sortOrder === 'asc' ? valA - valB : valB - valA;
-            });
-
-            dataState.currentPage = 1;
-            updateSortIcons(header);
-            renderTable();
-        }
 
         function queryData() {
             closeAllPanels();
