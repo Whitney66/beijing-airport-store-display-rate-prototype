@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>北京机场店商品出样率统计表 - 大数据平台</title>
+    <title>北京机场店商品出样率统计表</title>
     <style>
         * {
             margin: 0;
@@ -12,892 +12,1062 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', '微软雅黑', sans-serif;
+            background: #f5f7fa;
+            color: #262626;
+            min-width: 1366px;
         }
 
-        /* Header */
-        .header {
-            background: linear-gradient(90deg, #1890ff 0%, #1890ff 100%);
-            color: white;
-            padding: 12px 24px;
+        .topbar {
+            height: 56px;
+            background: linear-gradient(180deg, #2f69df 0%, #2b60d3 100%);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0 18px 0 14px;
+            color: #fff;
+            box-shadow: 0 1px 4px rgba(20, 54, 120, 0.2);
         }
 
-        .header-left {
+        .topbar-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            min-width: 0;
         }
 
-        .logo {
-            width: 32px;
-            height: 32px;
-            background: #ffc069;
-            border-radius: 50%;
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            font-size: 16px;
+            gap: 10px;
+            margin-right: 28px;
+            flex-shrink: 0;
         }
 
-        .brand-name {
-            font-size: 14px;
-            font-weight: 500;
+        .brand-logo {
+            width: 34px;
+            height: 34px;
+            display: block;
+            flex-shrink: 0;
         }
 
-        .nav-tabs {
-            display: flex;
-            gap: 0;
-            margin-left: 40px;
-            flex: 1;
-        }
-
-        .nav-tab {
-            color: rgba(255,255,255,0.85);
-            padding: 12px 16px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            font-size: 13px;
+        .brand-text {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             white-space: nowrap;
-            transition: all 0.3s;
         }
 
-        .nav-tab:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
+        .main-nav {
+            display: flex;
+            align-items: stretch;
+            height: 56px;
+            overflow: hidden;
         }
 
-        .nav-tab.active {
-            color: white;
-            border-bottom: 3px solid white;
+        .main-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s;
         }
 
-        .header-right {
+        .main-nav-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .main-nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+        }
+
+        .topbar-right {
             display: flex;
             align-items: center;
             gap: 16px;
+            flex-shrink: 0;
         }
 
-        .search-box {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 4px;
-            padding: 6px 12px;
-            color: white;
-            font-size: 12px;
-            width: 160px;
+        .header-search {
+            width: 210px;
+            height: 34px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.96);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 8px;
         }
 
-        .search-box::placeholder {
-            color: rgba(255,255,255,0.6);
+        .header-search input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: #262626;
+            background: transparent;
         }
 
-        .user-icon {
-            width: 28px;
-            height: 28px;
-            background: #52c41a;
+        .header-search-icon,
+        .header-icon {
+            color: #fff;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .header-search-icon {
+            color: #8c8c8c;
+            font-size: 14px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            background: linear-gradient(135deg, #ffffff 0%, #e8eefc 100%);
+            color: #c77f13;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            font-weight: 700;
             font-size: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .subbar {
+            height: 32px;
+            background: #ffffff;
+            border-bottom: 1px solid #dfe6f2;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .subbar-tab {
+            height: 28px;
+            padding: 0 16px;
+            border-radius: 4px 4px 0 0;
+            background: #2f69df;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 100%;
+            padding: 16px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #e4eaf3;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(31, 45, 61, 0.05);
+        }
+
+        .filter-section {
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
             cursor: pointer;
         }
 
-        /* Breadcrumb */
-        .breadcrumb {
-            background: white;
-            padding: 12px 24px;
-            border-bottom: 1px solid #e8e8e8;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .breadcrumb span {
-            margin: 0 6px;
-        }
-
-        .breadcrumb .active {
-            color: #1890ff;
-            font-weight: 500;
-        }
-
-        /* Main Content */
-        .main-container {
-            padding: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .page-title {
-            font-size: 18px;
+        .filter-title {
+            font-size: 15px;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
+            color: #1f2d3d;
         }
 
-        /* Filter Section */
-        .filter-section {
-            background: white;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        .filter-toggle {
+            color: #2f69df;
+            font-size: 13px;
+        }
+
+        .filter-content {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            flex-wrap: nowrap;
+        }
+
+        .filter-content.collapsed {
+            display: none;
         }
 
         .filter-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 16px;
+            position: relative;
+            flex: 0 0 auto;
         }
 
-        .filter-item {
-            display: flex;
-            flex-direction: column;
+        .filter-group.date-group {
+            width: 160px;
+        }
+
+        .filter-group.store-group {
+            width: 240px;
+        }
+
+        .filter-group.category-group,
+        .filter-group.class-group,
+        .filter-group.brand-group {
+            width: 220px;
         }
 
         .filter-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #333;
+            display: block;
+            font-size: 12px;
+            color: #5c6b7a;
             margin-bottom: 6px;
+            line-height: 1;
         }
 
-        .filter-control {
-            display: flex;
-            gap: 8px;
-        }
-
-        .date-input,
-        .select-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
+        .filter-input,
+        .select-box {
+            width: 100%;
+            min-height: 36px;
+            border: 1px solid #d9e2ef;
+            border-radius: 6px;
+            background: #ffffff;
             font-size: 13px;
-            color: #333;
-            background: white;
-            cursor: pointer;
-            transition: border-color 0.2s;
+            color: #262626;
         }
 
-        .date-input:hover,
-        .select-input:hover {
-            border-color: #40a9ff;
-        }
-
-        .date-input:focus,
-        .select-input:focus {
+        .filter-input {
+            padding: 0 10px;
             outline: none;
-            border-color: #1890ff;
-            box-shadow: 0 0 0 2px rgba(24,144,255,0.1);
         }
 
-        .filter-actions {
+        .filter-input:focus,
+        .select-box.open {
+            border-color: #2f69df;
+            box-shadow: 0 0 0 2px rgba(47, 105, 223, 0.12);
+        }
+
+        .select-box {
             display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 8px;
-            margin-top: 16px;
+            padding: 6px 10px;
+            cursor: pointer;
+            position: relative;
         }
 
-        .btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
+        .select-summary {
             display: flex;
             align-items: center;
             gap: 6px;
+            min-width: 0;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .summary-pill {
+            max-width: 100%;
+            height: 22px;
+            line-height: 22px;
+            border-radius: 11px;
+            padding: 0 8px;
+            background: #edf4ff;
+            color: #2f69df;
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .summary-count {
+            color: #8c8c8c;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .select-arrow {
+            color: #8c8c8c;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .select-panel {
+            position: absolute;
+            left: 0;
+            top: calc(100% + 8px);
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #d9e2ef;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(31, 45, 61, 0.15);
+            padding: 10px;
+            display: none;
+            z-index: 30;
+        }
+
+        .select-panel.show {
+            display: block;
+        }
+
+        .select-search {
+            width: 100%;
+            height: 32px;
+            border: 1px solid #d9e2ef;
+            border-radius: 6px;
+            padding: 0 10px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .select-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .select-actions button {
+            border: none;
+            background: none;
+            color: #2f69df;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .option-list {
+            max-height: 180px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 4px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #262626;
+        }
+
+        .option-item:hover {
+            background: #f5f8ff;
+        }
+
+        .option-item input {
+            width: 14px;
+            height: 14px;
+            accent-color: #2f69df;
+            flex-shrink: 0;
+        }
+
+        .action-section {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            margin-left: auto;
+            padding-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            height: 36px;
+            padding: 0 18px;
+            font-size: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
         }
 
         .btn-primary {
-            background: #1890ff;
-            color: white;
+            background: #2f69df;
+            color: #ffffff;
         }
 
         .btn-primary:hover {
-            background: #0050b3;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            background: #2158cb;
         }
 
-        .btn-secondary {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #d9d9d9;
+        .btn-default {
+            background: #ffffff;
+            color: #324152;
+            border-color: #d9e2ef;
         }
 
-        .btn-secondary:hover {
-            border-color: #40a9ff;
-            color: #40a9ff;
+        .btn-default:hover {
+            background: #f6f8fb;
         }
 
-        .btn-icon {
-            width: 20px;
-            height: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Table Section */
-        .table-section {
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        .table-wrapper {
             overflow: hidden;
         }
 
         .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid #e8e8e8;
-            background: #fafafa;
+            padding: 14px 16px;
+            border-bottom: 1px solid #edf1f7;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2d3d;
         }
 
-        .table-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 12px;
-            color: #666;
+        .table-container {
+            max-height: 420px;
+            overflow: auto;
         }
 
-        .record-count {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .record-count span {
-            font-weight: 500;
-            color: #1890ff;
-        }
-
-        .page-size-select {
-            padding: 4px 8px;
-            border: 1px solid #d9d9d9;
-            border-radius: 2px;
-            font-size: 12px;
-            background: white;
-            cursor: pointer;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            max-height: calc(100vh - 400px);
-        }
-
-        .data-table {
+        .table {
             width: 100%;
+            min-width: 1360px;
             border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .table thead {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #f0f3f8;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #edf1f7;
+            font-size: 13px;
+            color: #262626;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .table th {
+            text-align: left;
+            font-weight: 600;
+            color: #3b4a5a;
+        }
+
+        .table th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .table th.sortable:hover {
+            background: #e7edf7;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background: #fafbfd;
+        }
+
+        .table tbody tr:hover {
+            background: #f1f6ff;
+        }
+
+        .table td.number {
+            text-align: right;
+        }
+
+        .sort-icon {
+            margin-left: 4px;
+            color: #97a3af;
+            font-size: 11px;
+        }
+
+        .sort-icon.active {
+            color: #2f69df;
+        }
+
+        .empty-state {
+            display: none;
+            text-align: center;
+            padding: 64px 20px;
+            color: #8c8c8c;
+        }
+
+        .empty-state-title {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-link {
+            color: #2f69df;
+            text-decoration: none;
             font-size: 13px;
         }
 
-        .data-table thead {
-            background: #fafafa;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .data-table th {
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #e8e8e8;
-            white-space: nowrap;
-            background: #fafafa;
-        }
-
-        .data-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-            word-break: break-word;
-        }
-
-        .data-table tbody tr:hover {
-            background: #fafafa;
-        }
-
-        .rate-cell {
-            font-weight: 500;
-            color: #1890ff;
-        }
-
-        .rate-high {
-            color: #52c41a;
-        }
-
-        .rate-medium {
-            color: #faad14;
-        }
-
-        .rate-low {
-            color: #f5222d;
-        }
-
-        .num-cell {
-            text-align: right;
-            font-weight: 500;
-        }
-
-        /* Pagination */
-        .pagination {
+        .pagination-section {
             display: flex;
-            justify-content: flex-end;
             align-items: center;
+            justify-content: flex-end;
             gap: 8px;
-            padding: 16px 20px;
-            border-top: 1px solid #e8e8e8;
-            background: #fafafa;
-            font-size: 12px;
+            padding: 14px 16px 16px;
+            border-top: 1px solid #edf1f7;
+            background: #ffffff;
         }
 
-        .pagination-item {
-            padding: 4px 8px;
-            min-width: 28px;
-            text-align: center;
-            border: 1px solid #d9d9d9;
-            border-radius: 2px;
+        .page-text {
+            font-size: 13px;
+            color: #5c6b7a;
+            margin-right: 4px;
+        }
+
+        .pagination-btn {
+            height: 32px;
+            padding: 0 12px;
+            border: 1px solid #d9e2ef;
+            background: #ffffff;
+            color: #324152;
+            border-radius: 6px;
             cursor: pointer;
-            background: white;
-            transition: all 0.2s;
+            font-size: 13px;
         }
 
-        .pagination-item:hover {
-            border-color: #1890ff;
-            color: #1890ff;
+        .pagination-btn:hover:not(:disabled) {
+            background: #f6f8fb;
         }
 
-        .pagination-item.active {
-            background: #1890ff;
-            color: white;
-            border-color: #1890ff;
-        }
-
-        .pagination-item.disabled {
-            color: #bfbfbf;
+        .pagination-btn:disabled {
+            opacity: 0.45;
             cursor: not-allowed;
         }
 
-        /* Utility */
-        .empty-state {
-            padding: 60px 20px;
+        .pagination-input {
+            width: 54px;
+            height: 32px;
+            border: 1px solid #d9e2ef;
+            border-radius: 6px;
             text-align: center;
-            color: #999;
+            font-size: 13px;
+            outline: none;
         }
 
-        .empty-state-icon {
-            font-size: 48px;
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 320px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.2);
+            padding: 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #1f2d3d;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 16px;
-            color: #d9d9d9;
         }
 
-        .empty-state-text {
+        .modal-option {
+            padding: 10px 12px;
+            border: 1px solid #d9e2ef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 14px;
-            color: #999;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
+        .modal-option:hover {
+            border-color: #2f69df;
+            background: #f5f8ff;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="header-left">
-            <div class="logo">⭐</div>
-            <div class="brand-name">大数据平台</div>
-            <div class="nav-tabs">
-                <div class="nav-tab">经营看板</div>
-                <div class="nav-tab">销售分析</div>
-                <div class="nav-tab">进销存分析</div>
-                <div class="nav-tab">库存分析</div>
-                <div class="nav-tab">顾客分析</div>
-                <div class="nav-tab">采购分析</div>
-                <div class="nav-tab">操作分析</div>
-                <div class="nav-tab active">风险预控</div>
-                <div class="nav-tab">离线分析</div>
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="brand">
+                <img class="brand-logo" src="./logo.svg" alt="大数据平台 Logo">
+                <div class="brand-text">大数据平台</div>
             </div>
+            <nav class="main-nav">
+                <a href="#" class="main-nav-item">经营看板</a>
+                <a href="#" class="main-nav-item active">销售分析</a>
+                <a href="#" class="main-nav-item">进销存分析</a>
+                <a href="#" class="main-nav-item">库存分析</a>
+                <a href="#" class="main-nav-item">顾客分析</a>
+                <a href="#" class="main-nav-item">采购分析</a>
+                <a href="#" class="main-nav-item">提货分析</a>
+                <a href="#" class="main-nav-item">风险管控</a>
+                <a href="#" class="main-nav-item">离线分析</a>
+                <a href="#" class="main-nav-item">自定义分析</a>
+                <a href="#" class="main-nav-item">数据填报</a>
+            </nav>
         </div>
-        <div class="header-right">
-            <input type="text" class="search-box" placeholder="搜索...">
-            <div class="user-icon">🔔</div>
-            <div class="user-icon">👤</div>
+        <div class="topbar-right">
+            <div class="header-search">
+                <input type="text" placeholder="搜索">
+                <span class="header-search-icon">⌕</span>
+            </div>
+            <span class="header-icon">🔔</span>
+            <span class="header-icon">⛶</span>
+            <div class="avatar">cdf</div>
         </div>
     </div>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-        <span>首页</span>
-        <span>></span>
-        <span>报表中心</span>
-        <span>></span>
-        <span class="active">北京机场店商品出样率统计表</span>
+    <div class="subbar">
+        <div class="subbar-tab">销售汇总表</div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-container">
-        <div class="page-title">北京机场店商品出样率统计表</div>
+    <div class="container">
+        <div class="panel filter-section">
+            <div class="filter-header" onclick="toggleFilter()">
+                <div class="filter-title">筛选条件</div>
+                <div class="filter-toggle" id="toggleBtn">收起</div>
+            </div>
 
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <div class="filter-group">
-                <div class="filter-item">
-                    <label class="filter-label">日期</label>
-                    <input type="date" class="date-input" value="2026-06-08">
+            <div class="filter-content" id="filterContent">
+                <div class="filter-group date-group">
+                    <label class="filter-label" for="filterDate">日期</label>
+                    <input type="date" class="filter-input" id="filterDate" value="2026-06-08">
                 </div>
-                <div class="filter-item">
+
+                <div class="filter-group store-group multi-select" data-name="store">
                     <label class="filter-label">门店</label>
-                    <select class="select-input">
-                        <option selected>全部</option>
-                        <option>[7222]中免集团(北京)免税品有限公司</option>
-                        <option>[7223]中免集团北京大兴国际机场免税品有限公司</option>
-                    </select>
+                    <div class="select-box" onclick="toggleSelect(event, 'store')">
+                        <div class="select-summary" id="storeSummary"></div>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="select-panel" id="storePanel">
+                        <input class="select-search" type="text" placeholder="搜索门店" oninput="filterOptions('store', this.value)">
+                        <div class="select-actions">
+                            <button type="button" onclick="selectAllOptions(event, 'store', true)">全选</button>
+                            <button type="button" onclick="selectAllOptions(event, 'store', false)">清空</button>
+                        </div>
+                        <div class="option-list" id="storeOptions">
+                            <label class="option-item"><input type="checkbox" data-select="store" value="[7222]中免集团(北京)免税品有限公司" checked onchange="renderAllSummaries()"><span>[7222]中免集团(北京)免税品有限公司</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="store" value="[7223]中免集团北京大兴国际机场免税品有限公司" checked onchange="renderAllSummaries()"><span>[7223]中免集团北京大兴国际机场免税品有限公司</span></label>
+                        </div>
+                    </div>
                 </div>
-                <div class="filter-item">
-                    <label class="filter-label">商品新分类</label>
-                    <select class="select-input">
-                        <option selected>全选</option>
-                        <option>[010101]免税进口烟</option>
-                        <option>[010102]免税进口酒</option>
-                        <option>[010103]免税国产烟</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label class="filter-label">大类</label>
-                    <select class="select-input">
-                        <option selected>全选</option>
-                        <option>[01]进口酒</option>
-                        <option>[02]进口烟</option>
-                        <option>[03]进口香化</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <label class="filter-label">品牌</label>
-                    <select class="select-input">
-                        <option selected>全选</option>
-                        <option>[060139]Bulgari 宝格丽</option>
-                        <option>[060140]Gucci 古驰</option>
-                    </select>
-                </div>
-            </div>
 
-            <div class="filter-actions">
-                <button class="btn btn-primary">
-                    <span class="btn-icon">🔍</span>查询
-                </button>
-                <button class="btn btn-secondary">
-                    <span class="btn-icon">🔄</span>重置
-                </button>
-                <button class="btn btn-secondary">
-                    <span class="btn-icon">📥</span>导出
-                </button>
+                <div class="filter-group category-group multi-select" data-name="category">
+                    <label class="filter-label">商品新分类</label>
+                    <div class="select-box" onclick="toggleSelect(event, 'category')">
+                        <div class="select-summary" id="categorySummary"></div>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="select-panel" id="categoryPanel">
+                        <input class="select-search" type="text" placeholder="搜索分类" oninput="filterOptions('category', this.value)">
+                        <div class="select-actions">
+                            <button type="button" onclick="selectAllOptions(event, 'category', true)">全选</button>
+                            <button type="button" onclick="selectAllOptions(event, 'category', false)">清空</button>
+                        </div>
+                        <div class="option-list" id="categoryOptions">
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010101]免税进口烟" checked onchange="renderAllSummaries()"><span>[010101]免税进口烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010102]免税进口酒" checked onchange="renderAllSummaries()"><span>[010102]免税进口酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010103]免税国产烟" checked onchange="renderAllSummaries()"><span>[010103]免税国产烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010104]免税国产酒" onchange="renderAllSummaries()"><span>[010104]免税国产酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010105]免税香化" onchange="renderAllSummaries()"><span>[010105]免税香化</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group class-group multi-select" data-name="class">
+                    <label class="filter-label">大类</label>
+                    <div class="select-box" onclick="toggleSelect(event, 'class')">
+                        <div class="select-summary" id="classSummary"></div>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="select-panel" id="classPanel">
+                        <input class="select-search" type="text" placeholder="搜索大类" oninput="filterOptions('class', this.value)">
+                        <div class="select-actions">
+                            <button type="button" onclick="selectAllOptions(event, 'class', true)">全选</button>
+                            <button type="button" onclick="selectAllOptions(event, 'class', false)">清空</button>
+                        </div>
+                        <div class="option-list" id="classOptions">
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[01]进口酒" checked onchange="renderAllSummaries()"><span>[01]进口酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[02]进口烟" onchange="renderAllSummaries()"><span>[02]进口烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[03]进口香化" onchange="renderAllSummaries()"><span>[03]进口香化</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[04]国产酒" onchange="renderAllSummaries()"><span>[04]国产酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[05]国产烟" onchange="renderAllSummaries()"><span>[05]国产烟</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group brand-group multi-select" data-name="brand">
+                    <label class="filter-label">品牌</label>
+                    <div class="select-box" onclick="toggleSelect(event, 'brand')">
+                        <div class="select-summary" id="brandSummary"></div>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="select-panel" id="brandPanel">
+                        <input class="select-search" type="text" placeholder="搜索品牌" oninput="filterOptions('brand', this.value)">
+                        <div class="select-actions">
+                            <button type="button" onclick="selectAllOptions(event, 'brand', true)">全选</button>
+                            <button type="button" onclick="selectAllOptions(event, 'brand', false)">清空</button>
+                        </div>
+                        <div class="option-list" id="brandOptions">
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060139]Bulgari 宝格丽" checked onchange="renderAllSummaries()"><span>[060139]Bulgari 宝格丽</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060140]Louis Vuitton" checked onchange="renderAllSummaries()"><span>[060140]Louis Vuitton</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060141]Hermès" onchange="renderAllSummaries()"><span>[060141]Hermès</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060142]Cartier" onchange="renderAllSummaries()"><span>[060142]Cartier</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060143]Rolex" onchange="renderAllSummaries()"><span>[060143]Rolex</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-section">
+                    <button class="btn btn-primary" onclick="queryData()">查询</button>
+                    <button class="btn btn-default" onclick="resetFilter()">重置</button>
+                    <button class="btn btn-default" onclick="openExportModal()">导出</button>
+                </div>
             </div>
         </div>
 
-        <!-- Table Section -->
-        <div class="table-section">
-            <div class="table-header">
-                <div class="table-info">
-                    <div class="record-count">
-                        共 <span>30</span> 条
-                    </div>
-                    <div>
-                        <label>每页行数：</label>
-                        <select class="page-size-select">
-                            <option>10</option>
-                            <option selected>30</option>
-                            <option>50</option>
-                            <option>100</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="data-table">
+        <div class="panel table-wrapper">
+            <div class="table-header">北京机场店商品出样率统计表</div>
+            <div class="table-container" id="tableContainer">
+                <table class="table" id="dataTable">
                     <thead>
                         <tr>
-                            <th>日期</th>
-                            <th>门店</th>
-                            <th>商品新分类</th>
-                            <th>大类</th>
-                            <th>品牌</th>
-                            <th>正品SKU出样率</th>
-                            <th>免值品出样率</th>
-                            <th>正品SKU数量</th>
-                            <th>免值品SKU数量</th>
-                            <th>待处理SKU数量</th>
+                            <th style="width: 120px;">日期</th>
+                            <th style="width: 240px;">门店</th>
+                            <th style="width: 180px;">商品新分类</th>
+                            <th style="width: 120px;">大类</th>
+                            <th style="width: 180px;">品牌</th>
+                            <th style="width: 130px;" class="sortable" onclick="sortTable('正品SKU出样率', this)">正品SKU出样率 <span class="sort-icon">↕</span></th>
+                            <th style="width: 130px;" class="sortable" onclick="sortTable('免值品SKU出样率', this)">免值品SKU出样率 <span class="sort-icon">↕</span></th>
+                            <th style="width: 120px;" class="sortable" onclick="sortTable('正品SKU数量', this)">正品SKU数量 <span class="sort-icon">↕</span></th>
+                            <th style="width: 130px;" class="sortable" onclick="sortTable('免值品SKU数量', this)">免值品SKU数量 <span class="sort-icon">↕</span></th>
+                            <th style="width: 130px;" class="sortable" onclick="sortTable('待处理SKU数量', this)">待处理SKU数量 <span class="sort-icon">↕</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010101]免税进口烟</td>
-                            <td>[02]进口烟</td>
-                            <td>[001001]国际品牌A</td>
-                            <td class="rate-cell rate-high">95.50%</td>
-                            <td class="rate-cell rate-high">98.20%</td>
-                            <td class="num-cell">156</td>
-                            <td class="num-cell">28</td>
-                            <td class="num-cell">3</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010102]免税进口酒</td>
-                            <td>[01]进口酒</td>
-                            <td>[060139]Bulgari 宝格丽</td>
-                            <td class="rate-cell rate-high">92.30%</td>
-                            <td class="rate-cell rate-medium">76.50%</td>
-                            <td class="num-cell">234</td>
-                            <td class="num-cell">45</td>
-                            <td class="num-cell">8</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010103]免税国产烟</td>
-                            <td>[05]国产烟</td>
-                            <td>[002001]国产品牌B</td>
-                            <td class="rate-cell rate-medium">68.90%</td>
-                            <td class="rate-cell rate-low">45.20%</td>
-                            <td class="num-cell">89</td>
-                            <td class="num-cell">12</td>
-                            <td class="num-cell">5</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010105]免税香化</td>
-                            <td>[03]进口香化</td>
-                            <td>[003001]香化品牌C</td>
-                            <td class="rate-cell rate-high">87.60%</td>
-                            <td class="rate-cell rate-high">91.20%</td>
-                            <td class="num-cell">178</td>
-                            <td class="num-cell">34</td>
-                            <td class="num-cell">2</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010106]免税奢侈品</td>
-                            <td>[06]进口精品</td>
-                            <td>[060140]Gucci 古驰</td>
-                            <td class="rate-cell rate-high">94.70%</td>
-                            <td class="rate-cell rate-high">96.80%</td>
-                            <td class="num-cell">312</td>
-                            <td class="num-cell">67</td>
-                            <td class="num-cell">4</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010108]免税电子产品</td>
-                            <td>[08]代理品牌商品</td>
-                            <td>[004001]电子品牌D</td>
-                            <td class="rate-cell rate-medium">71.50%</td>
-                            <td class="rate-cell rate-low">52.30%</td>
-                            <td class="num-cell">145</td>
-                            <td class="num-cell">23</td>
-                            <td class="num-cell">6</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010109]免税食品百货</td>
-                            <td>[07]进口食品</td>
-                            <td>[005001]食品品牌E</td>
-                            <td class="rate-cell rate-high">89.20%</td>
-                            <td class="rate-cell rate-high">93.10%</td>
-                            <td class="num-cell">267</td>
-                            <td class="num-cell">41</td>
-                            <td class="num-cell">3</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010110]免税其他</td>
-                            <td>[10]奥运产品</td>
-                            <td>[006001]其他品牌F</td>
-                            <td class="rate-cell rate-medium">65.80%</td>
-                            <td class="rate-cell rate-low">48.90%</td>
-                            <td class="num-cell">98</td>
-                            <td class="num-cell">15</td>
-                            <td class="num-cell">7</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[020102]国产有税进口酒</td>
-                            <td>[19]有税进口酒</td>
-                            <td>[007001]品牌G</td>
-                            <td class="rate-cell rate-high">91.40%</td>
-                            <td class="rate-cell rate-high">94.60%</td>
-                            <td class="num-cell">201</td>
-                            <td class="num-cell">36</td>
-                            <td class="num-cell">5</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[020105]国产有税香化</td>
-                            <td>[09]有税国产品</td>
-                            <td>[008001]品牌H</td>
-                            <td class="rate-cell rate-high">86.70%</td>
-                            <td class="rate-cell rate-high">89.30%</td>
-                            <td class="num-cell">167</td>
-                            <td class="num-cell">31</td>
-                            <td class="num-cell">4</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[020106]国产有税奢侈品</td>
-                            <td>[14]统购有税精品</td>
-                            <td>[009001]品牌I</td>
-                            <td class="rate-cell rate-medium">73.50%</td>
-                            <td class="rate-cell rate-medium">68.40%</td>
-                            <td class="num-cell">123</td>
-                            <td class="num-cell">22</td>
-                            <td class="num-cell">9</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[020108]国产有税电子产品</td>
-                            <td>[09]有税国产品</td>
-                            <td>[010001]品牌J</td>
-                            <td class="rate-cell rate-high">88.90%</td>
-                            <td class="rate-cell rate-high">92.10%</td>
-                            <td class="num-cell">189</td>
-                            <td class="num-cell">35</td>
-                            <td class="num-cell">2</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[020202]进口有税进口酒</td>
-                            <td>[20]退税商品</td>
-                            <td>[011001]品牌K</td>
-                            <td class="rate-cell rate-high">90.20%</td>
-                            <td class="rate-cell rate-high">95.30%</td>
-                            <td class="num-cell">234</td>
-                            <td class="num-cell">52</td>
-                            <td class="num-cell">3</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[020205]进口有税香化</td>
-                            <td>[03]进口香化</td>
-                            <td>[012001]品牌L</td>
-                            <td class="rate-cell rate-medium">74.60%</td>
-                            <td class="rate-cell rate-medium">71.20%</td>
-                            <td class="num-cell">112</td>
-                            <td class="num-cell">18</td>
-                            <td class="num-cell">8</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[020206]进口有税奢侈品</td>
-                            <td>[15]退税精品</td>
-                            <td>[013001]品牌M</td>
-                            <td class="rate-cell rate-high">93.80%</td>
-                            <td class="rate-cell rate-high">97.10%</td>
-                            <td class="num-cell">289</td>
-                            <td class="num-cell">58</td>
-                            <td class="num-cell">2</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[020209]进口有税食品百货</td>
-                            <td>[21]农产品</td>
-                            <td>[014001]品牌N</td>
-                            <td class="rate-cell rate-high">85.40%</td>
-                            <td class="rate-cell rate-high">88.60%</td>
-                            <td class="num-cell">156</td>
-                            <td class="num-cell">29</td>
-                            <td class="num-cell">5</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[020210]进口有税其他</td>
-                            <td>[22]海南免税</td>
-                            <td>[015001]品牌O</td>
-                            <td class="rate-cell rate-medium">69.50%</td>
-                            <td class="rate-cell rate-low">54.70%</td>
-                            <td class="num-cell">87</td>
-                            <td class="num-cell">14</td>
-                            <td class="num-cell">6</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010101]免税进口烟</td>
-                            <td>[02]进口烟</td>
-                            <td>[016001]品牌P</td>
-                            <td class="rate-cell rate-high">96.10%</td>
-                            <td class="rate-cell rate-high">99.20%</td>
-                            <td class="num-cell">267</td>
-                            <td class="num-cell">44</td>
-                            <td class="num-cell">1</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010102]免税进口酒</td>
-                            <td>[01]进口酒</td>
-                            <td>[017001]品牌Q</td>
-                            <td class="rate-cell rate-high">91.70%</td>
-                            <td class="rate-cell rate-high">94.80%</td>
-                            <td class="num-cell">203</td>
-                            <td class="num-cell">38</td>
-                            <td class="num-cell">4</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010103]免税国产烟</td>
-                            <td>[05]国产烟</td>
-                            <td>[018001]品牌R</td>
-                            <td class="rate-cell rate-medium">70.20%</td>
-                            <td class="rate-cell rate-low">50.60%</td>
-                            <td class="num-cell">134</td>
-                            <td class="num-cell">24</td>
-                            <td class="num-cell">7</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010104]免税国产酒</td>
-                            <td>[04]国产酒</td>
-                            <td>[019001]品牌S</td>
-                            <td class="rate-cell rate-high">84.30%</td>
-                            <td class="rate-cell rate-high">87.40%</td>
-                            <td class="num-cell">145</td>
-                            <td class="num-cell">26</td>
-                            <td class="num-cell">6</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010105]免税香化</td>
-                            <td>[03]进口香化</td>
-                            <td>[020001]品牌T</td>
-                            <td class="rate-cell rate-high">89.80%</td>
-                            <td class="rate-cell rate-high">93.50%</td>
-                            <td class="num-cell">198</td>
-                            <td class="num-cell">37</td>
-                            <td class="num-cell">3</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010106]免税奢侈品</td>
-                            <td>[06]进口精品</td>
-                            <td>[021001]品牌U</td>
-                            <td class="rate-cell rate-medium">75.90%</td>
-                            <td class="rate-cell rate-medium">72.60%</td>
-                            <td class="num-cell">167</td>
-                            <td class="num-cell">28</td>
-                            <td class="num-cell">8</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010108]免税电子产品</td>
-                            <td>[08]代理品牌商品</td>
-                            <td>[022001]品牌V</td>
-                            <td class="rate-cell rate-high">92.40%</td>
-                            <td class="rate-cell rate-high">95.70%</td>
-                            <td class="num-cell">256</td>
-                            <td class="num-cell">48</td>
-                            <td class="num-cell">2</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[010109]免税食品百货</td>
-                            <td>[07]进口食品</td>
-                            <td>[023001]品牌W</td>
-                            <td class="rate-cell rate-high">88.10%</td>
-                            <td class="rate-cell rate-high">91.20%</td>
-                            <td class="num-cell">189</td>
-                            <td class="num-cell">33</td>
-                            <td class="num-cell">4</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[010110]免税其他</td>
-                            <td>[10]奥运产品</td>
-                            <td>[024001]品牌X</td>
-                            <td class="rate-cell rate-medium">67.60%</td>
-                            <td class="rate-cell rate-low">49.20%</td>
-                            <td class="num-cell">112</td>
-                            <td class="num-cell">19</td>
-                            <td class="num-cell">9</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7223]中免集团大兴机场</td>
-                            <td>[020102]国产有税进口酒</td>
-                            <td>[19]有税进口酒</td>
-                            <td>[025001]品牌Y</td>
-                            <td class="rate-cell rate-high">86.50%</td>
-                            <td class="rate-cell rate-high">90.30%</td>
-                            <td class="num-cell">234</td>
-                            <td class="num-cell">42</td>
-                            <td class="num-cell">5</td>
-                        </tr>
-                        <tr>
-                            <td>2026-06-08</td>
-                            <td>[7222]中免集团(北京)</td>
-                            <td>[020104]国产有税国产酒</td>
-                            <td>[25]有税国产酒</td>
-                            <td>[026001]品牌Z</td>
-                            <td class="rate-cell rate-high">93.20%</td>
-                            <td class="rate-cell rate-high">96.40%</td>
-                            <td class="num-cell">278</td>
-                            <td class="num-cell">51</td>
-                            <td class="num-cell">3</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="tableBody"></tbody>
                 </table>
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-title">暂无数据</div>
+                    <div style="font-size: 12px; margin-bottom: 10px;">根据当前筛选条件，未找到相关数据</div>
+                    <a class="empty-state-link" href="javascript:resetFilter()">重置筛选</a>
+                </div>
             </div>
-
-            <div class="pagination">
-                <span style="margin-right: 8px;">第 1 页</span>
-                <span class="pagination-item disabled">◀</span>
-                <span class="pagination-item active">1</span>
-                <span class="pagination-item">2</span>
-                <span class="pagination-item">▶</span>
-                <span style="margin-left: 16px; color: #666;">共 30 条</span>
+            <div class="pagination-section">
+                <span class="page-text">第</span>
+                <input type="number" class="pagination-input" id="pageInput" value="1" min="1" onchange="jumpPage()">
+                <span class="page-text">/ <span id="totalPages">1</span> 页</span>
+                <button class="pagination-btn" onclick="firstPage()">首页</button>
+                <button class="pagination-btn" onclick="prevPage()">上一页</button>
+                <button class="pagination-btn" onclick="nextPage()">下一页</button>
+                <button class="pagination-btn" onclick="lastPage()">末页</button>
             </div>
         </div>
     </div>
+
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-title">选择导出格式</div>
+            <div class="modal-options">
+                <div class="modal-option" onclick="exportData('xlsx')">导出为 Excel (.xlsx)</div>
+                <div class="modal-option" onclick="exportData('csv')">导出为 CSV (.csv)</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" onclick="closeExportModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultState = {
+            date: '2026-06-08',
+            store: ['[7222]中免集团(北京)免税品有限公司', '[7223]中免集团北京大兴国际机场免税品有限公司'],
+            category: ['[010101]免税进口烟', '[010102]免税进口酒', '[010103]免税国产烟'],
+            class: ['[01]进口酒'],
+            brand: ['[060139]Bulgari 宝格丽', '[060140]Louis Vuitton']
+        };
+
+        let dataState = {
+            filterCollapsed: false,
+            currentPage: 1,
+            pageSize: 20,
+            totalCount: 0,
+            sortColumn: '',
+            sortOrder: 'asc',
+            data: []
+        };
+
+        function generateMockData() {
+            const categories = ['[010101]免税进口烟', '[010102]免税进口酒', '[010103]免税国产烟', '[010104]免税国产酒', '[010105]免税香化'];
+            const classes = ['[01]进口酒', '[02]进口烟', '[03]进口香化', '[04]国产酒', '[05]国产烟'];
+            const brands = ['[060139]Bulgari 宝格丽', '[060140]Louis Vuitton', '[060141]Hermès', '[060142]Cartier', '[060143]Rolex'];
+            const stores = ['[7222]中免集团(北京)免税品有限公司', '[7223]中免集团北京大兴国际机场免税品有限公司'];
+            const data = [];
+
+            for (let i = 1; i <= 68; i++) {
+                const category = categories[i % categories.length];
+                const mainClass = classes[i % classes.length];
+                const brand = brands[i % brands.length];
+                const store = stores[i % stores.length];
+                data.push({
+                    日期: '2026-06-08',
+                    门店: store,
+                    商品新分类: category,
+                    大类: mainClass,
+                    品牌: brand,
+                    '正品SKU出样率': (78 + (i % 17) * 0.91).toFixed(2),
+                    '免值品SKU出样率': (74 + (i % 13) * 1.08).toFixed(2),
+                    '正品SKU数量': 120 + i * 3,
+                    '免值品SKU数量': 85 + i * 2,
+                    '待处理SKU数量': 8 + (i % 19)
+                });
+            }
+
+            return data;
+        }
+
+        function init() {
+            dataState.data = generateMockData();
+            dataState.totalCount = dataState.data.length;
+            document.getElementById('filterDate').value = defaultState.date;
+            renderAllSummaries();
+            renderTable();
+            document.addEventListener('click', closeAllPanels);
+        }
+
+        function getSelectedValues(name) {
+            return Array.from(document.querySelectorAll(`input[data-select="${name}"]:checked`)).map(item => item.value);
+        }
+
+        function renderSummary(name) {
+            const selected = getSelectedValues(name);
+            const summary = document.getElementById(`${name}Summary`);
+
+            if (!selected.length) {
+                summary.innerHTML = '<span class="summary-count">请选择</span>';
+                return;
+            }
+
+            const first = selected[0];
+            const extra = selected.length > 1 ? `<span class="summary-count">+${selected.length - 1}</span>` : '';
+            summary.innerHTML = `<span class="summary-pill" title="${selected.join('、')}">${first}</span>${extra}`;
+        }
+
+        function renderAllSummaries() {
+            ['store', 'category', 'class', 'brand'].forEach(renderSummary);
+        }
+
+        function toggleSelect(event, name) {
+            event.stopPropagation();
+            const panel = document.getElementById(`${name}Panel`);
+            const box = panel.previousElementSibling;
+            const isOpen = panel.classList.contains('show');
+            closeAllPanels();
+            if (!isOpen) {
+                panel.classList.add('show');
+                box.classList.add('open');
+            }
+        }
+
+        function closeAllPanels(event) {
+            if (event && event.target.closest('.multi-select')) {
+                return;
+            }
+            document.querySelectorAll('.select-panel').forEach(panel => panel.classList.remove('show'));
+            document.querySelectorAll('.select-box').forEach(box => box.classList.remove('open'));
+        }
+
+        function selectAllOptions(event, name, checked) {
+            event.stopPropagation();
+            document.querySelectorAll(`input[data-select="${name}"]`).forEach(item => {
+                if (item.closest('.option-item').style.display !== 'none') {
+                    item.checked = checked;
+                }
+            });
+            renderAllSummaries();
+        }
+
+        function filterOptions(name, keyword) {
+            const lower = keyword.trim().toLowerCase();
+            document.querySelectorAll(`#${name}Options .option-item`).forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.style.display = !lower || text.includes(lower) ? 'flex' : 'none';
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+            const start = (dataState.currentPage - 1) * dataState.pageSize;
+            const end = start + dataState.pageSize;
+            const pageData = dataState.data.slice(start, end);
+
+            if (!pageData.length) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                document.getElementById('totalPages').textContent = '1';
+                document.getElementById('pageInput').value = 1;
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tbody.innerHTML = pageData.map(row => `
+                <tr>
+                    <td>${row.日期}</td>
+                    <td title="${row.门店}">${row.门店}</td>
+                    <td>${row.商品新分类}</td>
+                    <td>${row.大类}</td>
+                    <td title="${row.品牌}">${row.品牌}</td>
+                    <td class="number">${row['正品SKU出样率']}%</td>
+                    <td class="number">${row['免值品SKU出样率']}%</td>
+                    <td class="number">${row['正品SKU数量']}</td>
+                    <td class="number">${row['免值品SKU数量']}</td>
+                    <td class="number">${row['待处理SKU数量']}</td>
+                </tr>
+            `).join('');
+
+            const totalPages = Math.max(1, Math.ceil(dataState.data.length / dataState.pageSize));
+            document.getElementById('totalPages').textContent = totalPages;
+            document.getElementById('pageInput').value = dataState.currentPage;
+        }
+
+        function updateSortIcons(currentHeader) {
+            document.querySelectorAll('.sort-icon').forEach(icon => {
+                icon.classList.remove('active');
+                icon.textContent = '↕';
+            });
+            if (!currentHeader) {
+                return;
+            }
+            const icon = currentHeader.querySelector('.sort-icon');
+            icon.classList.add('active');
+            icon.textContent = dataState.sortOrder === 'asc' ? '↑' : '↓';
+        }
+
+        function sortTable(column, header) {
+            if (dataState.sortColumn === column) {
+                dataState.sortOrder = dataState.sortOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                dataState.sortColumn = column;
+                dataState.sortOrder = 'asc';
+            }
+
+            dataState.data.sort((a, b) => {
+                const valA = parseFloat(a[column]);
+                const valB = parseFloat(b[column]);
+                return dataState.sortOrder === 'asc' ? valA - valB : valB - valA;
+            });
+
+            dataState.currentPage = 1;
+            updateSortIcons(header);
+            renderTable();
+        }
+
+        function queryData() {
+            closeAllPanels();
+            dataState.currentPage = 1;
+            renderTable();
+        }
+
+        function resetFilter() {
+            document.getElementById('filterDate').value = defaultState.date;
+            ['store', 'category', 'class', 'brand'].forEach(name => {
+                document.querySelectorAll(`input[data-select="${name}"]`).forEach(item => {
+                    item.checked = defaultState[name].includes(item.value);
+                });
+                const search = document.querySelector(`#${name}Panel .select-search`);
+                if (search) {
+                    search.value = '';
+                }
+                filterOptions(name, '');
+            });
+            renderAllSummaries();
+            closeAllPanels();
+            dataState.currentPage = 1;
+            renderTable();
+        }
+
+        function toggleFilter() {
+            dataState.filterCollapsed = !dataState.filterCollapsed;
+            const content = document.getElementById('filterContent');
+            const button = document.getElementById('toggleBtn');
+            content.classList.toggle('collapsed', dataState.filterCollapsed);
+            button.textContent = dataState.filterCollapsed ? '展开' : '收起';
+        }
+
+        function firstPage() {
+            dataState.currentPage = 1;
+            renderTable();
+        }
+
+        function prevPage() {
+            if (dataState.currentPage > 1) {
+                dataState.currentPage -= 1;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.max(1, Math.ceil(dataState.data.length / dataState.pageSize));
+            if (dataState.currentPage < totalPages) {
+                dataState.currentPage += 1;
+                renderTable();
+            }
+        }
+
+        function lastPage() {
+            dataState.currentPage = Math.max(1, Math.ceil(dataState.data.length / dataState.pageSize));
+            renderTable();
+        }
+
+        function jumpPage() {
+            const totalPages = Math.max(1, Math.ceil(dataState.data.length / dataState.pageSize));
+            const input = document.getElementById('pageInput');
+            const page = Math.min(totalPages, Math.max(1, parseInt(input.value || '1', 10)));
+            dataState.currentPage = page;
+            renderTable();
+        }
+
+        function openExportModal() {
+            document.getElementById('exportModal').classList.add('show');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.remove('show');
+        }
+
+        function exportData(format) {
+            alert(`已导出为 ${format.toUpperCase()} 格式`);
+            closeExportModal();
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
