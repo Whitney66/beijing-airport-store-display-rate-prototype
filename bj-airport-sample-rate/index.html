@@ -172,27 +172,9 @@
         }
 
         .filter-section {
-            padding: 16px;
+            padding: 14px 16px;
             margin-bottom: 14px;
-        }
-
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            cursor: pointer;
-        }
-
-        .filter-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1f2d3d;
-        }
-
-        .filter-toggle {
-            color: #2f69df;
-            font-size: 13px;
+            overflow-x: auto;
         }
 
         .filter-content {
@@ -200,10 +182,7 @@
             align-items: flex-end;
             gap: 12px;
             flex-wrap: nowrap;
-        }
-
-        .filter-content.collapsed {
-            display: none;
+            min-width: max-content;
         }
 
         .filter-group {
@@ -415,14 +394,6 @@
             overflow: hidden;
         }
 
-        .table-header {
-            padding: 14px 16px;
-            border-bottom: 1px solid #edf1f7;
-            font-size: 15px;
-            font-weight: 600;
-            color: #1f2d3d;
-        }
-
         .table-container {
             max-height: 420px;
             overflow: auto;
@@ -430,7 +401,7 @@
 
         .table {
             width: 100%;
-            min-width: 1360px;
+            min-width: 1620px;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -448,7 +419,6 @@
             border-bottom: 1px solid #edf1f7;
             font-size: 13px;
             color: #262626;
-            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -457,6 +427,14 @@
             text-align: left;
             font-weight: 600;
             color: #3b4a5a;
+            white-space: normal;
+            line-height: 1.35;
+            word-break: break-all;
+            vertical-align: middle;
+        }
+
+        .table td {
+            white-space: nowrap;
         }
 
         .table th.sortable {
@@ -644,16 +622,11 @@
     </div>
 
     <div class="subbar">
-        <div class="subbar-tab">销售汇总表</div>
+        <div class="subbar-tab">北京机场店商品出样率统计表</div>
     </div>
 
     <div class="container">
         <div class="panel filter-section">
-            <div class="filter-header" onclick="toggleFilter()">
-                <div class="filter-title">筛选条件</div>
-                <div class="filter-toggle" id="toggleBtn">收起</div>
-            </div>
-
             <div class="filter-content" id="filterContent">
                 <div class="filter-group date-group">
                     <label class="filter-label" for="filterDate">日期</label>
@@ -673,8 +646,9 @@
                             <button type="button" onclick="selectAllOptions(event, 'store', false)">清空</button>
                         </div>
                         <div class="option-list" id="storeOptions">
-                            <label class="option-item"><input type="checkbox" data-select="store" value="[7222]中免集团(北京)免税品有限公司" checked onchange="renderAllSummaries()"><span>[7222]中免集团(北京)免税品有限公司</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="store" value="[7223]中免集团北京大兴国际机场免税品有限公司" checked onchange="renderAllSummaries()"><span>[7223]中免集团北京大兴国际机场免税品有限公司</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="store" value="全部" checked onchange="handleAllOptionChange('store', this)"><span>全部</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="store" value="[7222]中免集团(北京)免税品有限公司" checked onchange="handleOptionChange('store')"><span>[7222]中免集团(北京)免税品有限公司</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="store" value="[7223]中免集团北京大兴国际机场免税品有限公司" checked onchange="handleOptionChange('store')"><span>[7223]中免集团北京大兴国际机场免税品有限公司</span></label>
                         </div>
                     </div>
                 </div>
@@ -692,11 +666,12 @@
                             <button type="button" onclick="selectAllOptions(event, 'category', false)">清空</button>
                         </div>
                         <div class="option-list" id="categoryOptions">
-                            <label class="option-item"><input type="checkbox" data-select="category" value="[010101]免税进口烟" checked onchange="renderAllSummaries()"><span>[010101]免税进口烟</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="category" value="[010102]免税进口酒" checked onchange="renderAllSummaries()"><span>[010102]免税进口酒</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="category" value="[010103]免税国产烟" checked onchange="renderAllSummaries()"><span>[010103]免税国产烟</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="category" value="[010104]免税国产酒" onchange="renderAllSummaries()"><span>[010104]免税国产酒</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="category" value="[010105]免税香化" onchange="renderAllSummaries()"><span>[010105]免税香化</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="全部" checked onchange="handleAllOptionChange('category', this)"><span>全部</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010101]免税进口烟" checked onchange="handleOptionChange('category')"><span>[010101]免税进口烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010102]免税进口酒" checked onchange="handleOptionChange('category')"><span>[010102]免税进口酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010103]免税国产烟" checked onchange="handleOptionChange('category')"><span>[010103]免税国产烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010104]免税国产酒" onchange="handleOptionChange('category')"><span>[010104]免税国产酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="category" value="[010105]免税香化" onchange="handleOptionChange('category')"><span>[010105]免税香化</span></label>
                         </div>
                     </div>
                 </div>
@@ -714,11 +689,12 @@
                             <button type="button" onclick="selectAllOptions(event, 'class', false)">清空</button>
                         </div>
                         <div class="option-list" id="classOptions">
-                            <label class="option-item"><input type="checkbox" data-select="class" value="[01]进口酒" checked onchange="renderAllSummaries()"><span>[01]进口酒</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="class" value="[02]进口烟" onchange="renderAllSummaries()"><span>[02]进口烟</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="class" value="[03]进口香化" onchange="renderAllSummaries()"><span>[03]进口香化</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="class" value="[04]国产酒" onchange="renderAllSummaries()"><span>[04]国产酒</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="class" value="[05]国产烟" onchange="renderAllSummaries()"><span>[05]国产烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="全部" checked onchange="handleAllOptionChange('class', this)"><span>全部</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[01]进口酒" checked onchange="handleOptionChange('class')"><span>[01]进口酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[02]进口烟" onchange="handleOptionChange('class')"><span>[02]进口烟</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[03]进口香化" onchange="handleOptionChange('class')"><span>[03]进口香化</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[04]国产酒" onchange="handleOptionChange('class')"><span>[04]国产酒</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="class" value="[05]国产烟" onchange="handleOptionChange('class')"><span>[05]国产烟</span></label>
                         </div>
                     </div>
                 </div>
@@ -736,11 +712,12 @@
                             <button type="button" onclick="selectAllOptions(event, 'brand', false)">清空</button>
                         </div>
                         <div class="option-list" id="brandOptions">
-                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060139]Bulgari 宝格丽" checked onchange="renderAllSummaries()"><span>[060139]Bulgari 宝格丽</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060140]Louis Vuitton" checked onchange="renderAllSummaries()"><span>[060140]Louis Vuitton</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060141]Hermès" onchange="renderAllSummaries()"><span>[060141]Hermès</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060142]Cartier" onchange="renderAllSummaries()"><span>[060142]Cartier</span></label>
-                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060143]Rolex" onchange="renderAllSummaries()"><span>[060143]Rolex</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="全部" checked onchange="handleAllOptionChange('brand', this)"><span>全部</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060139]Bulgari 宝格丽" checked onchange="handleOptionChange('brand')"><span>[060139]Bulgari 宝格丽</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060140]Louis Vuitton" checked onchange="handleOptionChange('brand')"><span>[060140]Louis Vuitton</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060141]Hermès" onchange="handleOptionChange('brand')"><span>[060141]Hermès</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060142]Cartier" onchange="handleOptionChange('brand')"><span>[060142]Cartier</span></label>
+                            <label class="option-item"><input type="checkbox" data-select="brand" value="[060143]Rolex" onchange="handleOptionChange('brand')"><span>[060143]Rolex</span></label>
                         </div>
                     </div>
                 </div>
@@ -754,7 +731,6 @@
         </div>
 
         <div class="panel table-wrapper">
-            <div class="table-header">北京机场店商品出样率统计表</div>
             <div class="table-container" id="tableContainer">
                 <table class="table" id="dataTable">
                     <thead>
@@ -764,11 +740,11 @@
                             <th style="width: 180px;">商品新分类</th>
                             <th style="width: 120px;">大类</th>
                             <th style="width: 180px;">品牌</th>
-                            <th style="width: 130px;" class="sortable" onclick="sortTable('正品SKU出样率', this)">正品SKU出样率 <span class="sort-icon">↕</span></th>
-                            <th style="width: 130px;" class="sortable" onclick="sortTable('免值品SKU出样率', this)">免值品SKU出样率 <span class="sort-icon">↕</span></th>
-                            <th style="width: 120px;" class="sortable" onclick="sortTable('正品SKU数量', this)">正品SKU数量 <span class="sort-icon">↕</span></th>
-                            <th style="width: 130px;" class="sortable" onclick="sortTable('免值品SKU数量', this)">免值品SKU数量 <span class="sort-icon">↕</span></th>
-                            <th style="width: 130px;" class="sortable" onclick="sortTable('待处理SKU数量', this)">待处理SKU数量 <span class="sort-icon">↕</span></th>
+                            <th style="width: 140px;" class="sortable" onclick="sortTable('正品SKU出样率', this)">正品SKU出样率 <span class="sort-icon">↕</span></th>
+                            <th style="width: 140px;" class="sortable" onclick="sortTable('免值品SKU出样率', this)">免值品SKU出样率 <span class="sort-icon">↕</span></th>
+                            <th style="width: 130px;" class="sortable" onclick="sortTable('正品SKU数量', this)">正品SKU数量 <span class="sort-icon">↕</span></th>
+                            <th style="width: 140px;" class="sortable" onclick="sortTable('免值品SKU数量', this)">免值品SKU数量 <span class="sort-icon">↕</span></th>
+                            <th style="width: 140px;" class="sortable" onclick="sortTable('待处理SKU数量', this)">待处理SKU数量 <span class="sort-icon">↕</span></th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -806,15 +782,14 @@
 
     <script>
         const defaultState = {
-            date: '2026-06-08',
-            store: ['[7222]中免集团(北京)免税品有限公司', '[7223]中免集团北京大兴国际机场免税品有限公司'],
-            category: ['[010101]免税进口烟', '[010102]免税进口酒', '[010103]免税国产烟'],
-            class: ['[01]进口酒'],
-            brand: ['[060139]Bulgari 宝格丽', '[060140]Louis Vuitton']
+            date: '',
+            store: ['全部'],
+            category: ['全部'],
+            class: ['全部'],
+            brand: ['全部']
         };
 
         let dataState = {
-            filterCollapsed: false,
             currentPage: 1,
             pageSize: 20,
             totalCount: 0,
@@ -852,25 +827,83 @@
             return data;
         }
 
+        function getYesterdayString() {
+            const date = new Date();
+            date.setDate(date.getDate() - 1);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getTodayString() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         function init() {
             dataState.data = generateMockData();
             dataState.totalCount = dataState.data.length;
-            document.getElementById('filterDate').value = defaultState.date;
+            defaultState.date = getYesterdayString();
+            const dateInput = document.getElementById('filterDate');
+            dateInput.value = defaultState.date;
+            dateInput.max = defaultState.date;
+            applyDefaultSelections();
             renderAllSummaries();
             renderTable();
             document.addEventListener('click', closeAllPanels);
+        }
+
+        function applyDefaultSelections() {
+            ['store', 'category', 'class', 'brand'].forEach(name => {
+                document.querySelectorAll(`input[data-select="${name}"]`).forEach(item => {
+                    item.checked = defaultState[name].includes(item.value);
+                });
+            });
         }
 
         function getSelectedValues(name) {
             return Array.from(document.querySelectorAll(`input[data-select="${name}"]:checked`)).map(item => item.value);
         }
 
+        function getNormalOptionInputs(name) {
+            return Array.from(document.querySelectorAll(`input[data-select="${name}"]`)).filter(item => item.value !== '全部');
+        }
+
+        function syncAllOption(name) {
+            const allInput = document.querySelector(`input[data-select="${name}"][value="全部"]`);
+            const normalInputs = getNormalOptionInputs(name);
+            const checkedCount = normalInputs.filter(item => item.checked).length;
+            if (allInput) {
+                allInput.checked = checkedCount === normalInputs.length || checkedCount === 0;
+            }
+        }
+
+        function handleAllOptionChange(name, element) {
+            const checked = element.checked;
+            getNormalOptionInputs(name).forEach(item => {
+                item.checked = checked;
+            });
+            if (!checked) {
+                element.checked = true;
+            }
+            renderAllSummaries();
+        }
+
+        function handleOptionChange(name) {
+            syncAllOption(name);
+            renderAllSummaries();
+        }
+
         function renderSummary(name) {
             const selected = getSelectedValues(name);
             const summary = document.getElementById(`${name}Summary`);
 
-            if (!selected.length) {
-                summary.innerHTML = '<span class="summary-count">请选择</span>';
+            if (!selected.length || selected.includes('全部')) {
+                summary.innerHTML = '<span class="summary-pill">全部</span>';
                 return;
             }
 
@@ -880,7 +913,10 @@
         }
 
         function renderAllSummaries() {
-            ['store', 'category', 'class', 'brand'].forEach(renderSummary);
+            ['store', 'category', 'class', 'brand'].forEach(name => {
+                syncAllOption(name);
+                renderSummary(name);
+            });
         }
 
         function toggleSelect(event, name) {
@@ -905,7 +941,11 @@
 
         function selectAllOptions(event, name, checked) {
             event.stopPropagation();
-            document.querySelectorAll(`input[data-select="${name}"]`).forEach(item => {
+            const allInput = document.querySelector(`input[data-select="${name}"][value="全部"]`);
+            if (allInput) {
+                allInput.checked = checked;
+            }
+            getNormalOptionInputs(name).forEach(item => {
                 if (item.closest('.option-item').style.display !== 'none') {
                     item.checked = checked;
                 }
@@ -996,11 +1036,11 @@
         }
 
         function resetFilter() {
-            document.getElementById('filterDate').value = defaultState.date;
+            const dateInput = document.getElementById('filterDate');
+            dateInput.value = defaultState.date;
+            dateInput.max = defaultState.date;
+            applyDefaultSelections();
             ['store', 'category', 'class', 'brand'].forEach(name => {
-                document.querySelectorAll(`input[data-select="${name}"]`).forEach(item => {
-                    item.checked = defaultState[name].includes(item.value);
-                });
                 const search = document.querySelector(`#${name}Panel .select-search`);
                 if (search) {
                     search.value = '';
@@ -1011,14 +1051,6 @@
             closeAllPanels();
             dataState.currentPage = 1;
             renderTable();
-        }
-
-        function toggleFilter() {
-            dataState.filterCollapsed = !dataState.filterCollapsed;
-            const content = document.getElementById('filterContent');
-            const button = document.getElementById('toggleBtn');
-            content.classList.toggle('collapsed', dataState.filterCollapsed);
-            button.textContent = dataState.filterCollapsed ? '展开' : '收起';
         }
 
         function firstPage() {
